@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../layouts/Nav.astro';
+import { loadInternal } from '../../lib/load-data';
+const mock = loadInternal();
+import type { InternalData } from '../../lib/types';
+import { linksHtml, vitalsHtml, guestTableHtml, servicesHtml, aiHtml, opsHtml, expiryHtml } from '../../lib/internal-render';
+import { legend, tileGrid } from '../../lib/tiles';
+import { diagram } from '../../lib/diagram';
+import '../../styles/internal.css';
+
+const d = mock as unknown as InternalData;
+const links = [
+  { href: '#launch', label: 'Launcher' }, { href: '#topology', label: 'Topology' }, { href: '#vitals', label: 'Vitals' },
+  { href: '#guests', label: 'Guests' }, { href: '#services', label: 'Services' }, { href: '#ops', label: 'Ops' },
+];
+---
+<Base title="Heisenberg Lab (internal)" description="Internal portal" robots="noindex, nofollow">
+  <Nav links={links} brand="Heisenberg Lab" label="Portal sections">
+    <p class="fresh" id="fresh" data-state="ok" role="status"><span class="dot" data-status="up" aria-hidden="true"></span><span id="fresh-text">Updated —</span></p>
+  </Nav>
+  <main id="main" class="wrap mc">
+    <section id="launch" aria-labelledby="h-launch">
+      <h2 id="h-launch">Launcher</h2>
+      <div class="launcher" id="links-slot" set:html={linksHtml(d)} />
+    </section>
+
+    <section id="topology" aria-labelledby="h-topo">
+      <div class="sec-head"><h2 id="h-topo">Live topology</h2><p class="muted">Select a guest for details.</p></div>
+      <div class="topo" id="topo-slot">
+        <div class="topo-tiles" id="tiles-slot" set:html={legend() + tileGrid(d.guests, true)} />
+        <div class="card topo-diagram" id="diagram-slot" set:html={diagram(d.guests, { internal: true, orient: 'tall', hostName: d.host.name as string })} />
+      </div>
+    </section>
+
+    <section id="vitals" aria-labelledby="h-vit">
+      <h2 id="h-vit">Vitals</h2>
+      <div class="vit-grid" id="vitals-slot" set:html={vitalsHtml(d)} />
+    </section>
+
+    <section id="guests" aria-labelledby="h-guests">
+      <h2 id="h-guests">Guests</h2>
+      <div class="card flush" id="guests-slot" set:html={guestTableHtml(d.guests, { k: 'id', dir: 1 })} />
+    </section>
+
+    <section id="services" aria-labelledby="h-svc" class="two">
+      <div class="card"><h2 id="h-svc">Services</h2><p class="cols-head small muted"><span>Status</span><span>Service</span><span class="r">30 days</span><span class="r">Latency</span></p><div id="services-slot" set:html={servicesHtml(d)} /></div>
+      <div class="card"><h2>AI stack</h2><div id="ai-slot" set:html={aiHtml(d)} /></div>
+    </section>
+
+    <section id="ops" aria-labelledby="h-ops" class="two">
+      <div class="card"><h2 id="h-ops">Ops feed</h2><div id="ops-slot" set:html={opsHtml(d)} /></div>
+      <div class="card"><h2>Expiry watch</h2><div id="expiry-slot" set:html={expiryHtml(d)} /></div>
+    </section>
+  </main>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="panel" id="panel" role="dialog" aria-modal="false" aria-label="Guest details" hidden>
+    <button type="button" class="icon-btn panel-close" id="panel-close" aria-label="Close details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div id="panel-body"></div>
+  </aside>
+  <script>
+    import '../../client/internal';
+  </script>
+</Base>

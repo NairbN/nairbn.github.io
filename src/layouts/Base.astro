@@ -1,0 +1,55 @@
+---
+import '@fontsource-variable/inter/opsz.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+interface Props { title: string; description?: string; canonical?: string; ogImage?: string; extraCss?: 'public' | 'internal'; robots?: string }
+const { title, description = '', canonical, ogImage, robots } = Astro.props;
+---
+<!doctype html>
+<html lang="en" data-target={__TARGET__}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    {robots && <meta name="robots" content={robots} />}
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {canonical && (
+      <>
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Heisenberg Lab" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        {ogImage && <meta property="og:image" content={ogImage} />}
+        {ogImage && <meta property="og:image:width" content="1200" />}
+        {ogImage && <meta property="og:image:height" content="630" />}
+        {ogImage && <meta property="og:image:alt" content="Heisenberg Lab: a self-hosted lab, shown as a periodic table of guests." />}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {ogImage && <meta name="twitter:image" content={ogImage} />}
+      </>
+    )}
+    <script is:inline>
+      (function () {
+        var r = document.documentElement;
+        r.classList.add('js');
+        try {
+          var q = new URLSearchParams(location.search).get('theme');
+          var t = q === 'dark' || q === 'light' ? q : localStorage.getItem('hl-theme');
+          if (t === 'dark' || t === 'light') r.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <slot />
+  </body>
+</html>

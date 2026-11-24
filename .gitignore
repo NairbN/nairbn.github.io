@@ -1,0 +1,6 @@
+node_modules/
+dist-public/
+dist-internal/
+.astro/
+_quarantine/
+*.log

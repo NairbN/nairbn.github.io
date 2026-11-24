@@ -1,0 +1,13 @@
+[
+  { "date": "2026-11-02", "title": "Safety-net plan and internal CA", "detail": "I decided to back up off the production host, set a snapshot-before-change rule, and stood up a private certificate authority." },
+  { "date": "2026-11-04", "title": "Lab audit and agent boundaries", "detail": "A full audit produced the renumbering plan, and I set the rule that the IT-assistant agent never gets root SSH." },
+  { "date": "2026-11-05", "title": "Renumbering and default-deny firewall", "detail": "Every guest moved to the ID-to-address scheme, one guest migrated from container to VM, and the firewall went default-deny." },
+  { "date": "2026-11-12", "title": "Backup disk-full bug found", "detail": "Orphaned backups from the old IDs filled the host disk and failed nightly jobs, which led to a documented cleanup procedure." },
+  { "date": "2026-11-14", "title": "Claude Code joins as lab admin", "detail": "flynn arrived in its own container, driven through Remote Control, sharing the Obsidian vault with the other agent." },
+  { "date": "2026-11-14", "title": "Restore testing automated", "detail": "A restore-tester subagent now proves backups boot by restoring them into an isolated scratch ID and tearing them down." },
+  { "date": "2026-11-21", "title": "Orchestrator model for agents", "detail": "The main agent plans and reviews while cheaper subagents do the legwork, with an auditor checking each change." },
+  { "date": "2026-11-21", "title": "Nightly vault and config backup", "detail": "A job pushes the vault history and sanitized configs to my Git server, blocked automatically by a secret scanner." },
+  { "date": "2026-11-23", "title": "Internal CA fix for phones", "detail": "A phone failing over Tailscale turned out to lack the root certificate, so I documented a CA install runbook." },
+  { "date": "2026-11-24", "title": "Local dictation on the GPU", "detail": "Dictation apps on my laptop and PC now clean up transcripts through the local model server." },
+  { "date": "2026-11-24", "title": "This showcase", "detail": "I decided to publish Heisenberg Lab, a sanitized public view of the lab, with the sandbox VM shown only as top secret." }
+]

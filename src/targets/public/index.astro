@@ -1,0 +1,184 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../layouts/Nav.astro';
+import { loadPublic } from '../../lib/load-data';
+const baked = loadPublic();
+import type { PublicData } from '../../lib/types';
+import { heroCounters, statusBoard } from '../../lib/public-render';
+import { legend, tileGrid } from '../../lib/tiles';
+import { diagramPair } from '../../lib/diagram';
+import { shortDate } from '../../lib/fmt';
+import '../../styles/public.css';
+
+const d = baked as unknown as PublicData;
+const SITE = 'https://nairbn.github.io/';
+const TITLE = 'Heisenberg Lab — Brian Nguyen';
+const DESC = 'Heisenberg Lab is a self-hosted homelab: one Proxmox host, local LLM inference on a 32 GB GPU, and AI agents that run it behind guardrails. Built by Brian Nguyen.';
+
+const studies = await Promise.all(
+  (await getCollection('case-studies')).sort((a, b) => a.data.order - b.data.order).map(async (e) => ({ e, Content: (await render(e)).Content })),
+);
+const lessons = await Promise.all(
+  (await getCollection('lessons')).sort((a, b) => String(b.data.date).localeCompare(String(a.data.date))).map(async (e) => ({ e, Content: (await render(e)).Content })),
+);
+const tlFiles = Object.values(import.meta.glob('../../content/timeline.json', { eager: true, import: 'default' })) as { date: string; title: string; detail: string }[][];
+const timeline = (tlFiles[0] ?? []).slice().sort((a, b) => a.date.localeCompare(b.date));
+
+const links = [
+  { href: '#architecture', label: 'Architecture' },
+  { href: '#guests', label: 'Guests' },
+  { href: '#status', label: 'Status' },
+  { href: '#work', label: 'Case studies' },
+  { href: '#timeline', label: 'Timeline' },
+  { href: '#lessons', label: 'Lessons' },
+  { href: '#stack', label: 'Stack' },
+  { href: '#about', label: 'About' },
+];
+const stack = ['Proxmox VE', 'Debian / LXC', 'Caddy', 'AdGuard Home', 'Tailscale', 'Prometheus', 'Grafana', 'Loki', 'Uptime Kuma', 'Vaultwarden', 'Gitea', 'llama-swap', 'Open WebUI', 'Home Assistant', 'Claude Code', 'Hermes Agent', 'Obsidian'];
+---
+<Base title={TITLE} description={DESC} canonical={SITE} ogImage={`${SITE}og.png`}>
+  <Nav links={links} brand="Heisenberg Lab" />
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="wrap hero-wrap">
+        <div class="tile hero-tile" aria-hidden="true" data-cat="infra">
+          <span class="tile-top"><span class="tile-num tile-tag">PVE</span><span class="pip"></span></span>
+          <span class="tile-sym">Hb</span>
+          <span class="tile-name">heisenberg</span>
+          <span class="tile-role">(the host)</span>
+          <span class="tile-status"><span class="dot" data-status="up"></span>Running</span>
+        </div>
+        <p class="live" id="live-badge" data-mode="snapshot"><span class="dot" data-status="stopped" aria-hidden="true"></span><span id="live-text">Snapshot</span></p>
+        <h1 id="hero-title">Heisenberg Lab</h1>
+        <p class="hero-line">A self-hosted lab: one Proxmox host, <span class="num" data-bind="lab.guests_total">{d.lab.guests_total}</span> guests, local LLM inference on a <span class="num" data-bind="gpu.vram_total_gb">{d.gpu.vram_total_gb}</span> GB GPU, run by AI agents behind guardrails.</p>
+        <div class="counters card" id="hero-counters" set:html={heroCounters(d)} />
+        <a class="byline" href="#about">
+          <img src="/assets/brian.jpg" alt="Portrait of Brian Nguyen" width="36" height="36" />
+          <span>Built by <strong>Brian Nguyen</strong></span>
+        </a>
+      </div>
+    </section>
+
+    <section id="architecture" aria-labelledby="h-arch" class="reveal">
+      <div class="wrap">
+        <div class="head"><h2 id="h-arch">How a request travels</h2><p>Everything runs on one machine. Remote access arrives over a VPN, a reverse proxy and DNS form the edge, and each layer below does one job.</p></div>
+        <div class="card diagram-card" id="diagram-slot" set:html={diagramPair(d.guests, false)} />
+        <p class="diagram-note"><span><i></i>request path</span><span><i class="thin"></i>proxy routes to each layer</span><span><i class="dash"></i>name lookups and agent calls</span></p>
+      </div>
+    </section>
+
+    <section id="guests" aria-labelledby="h-guests" class="reveal">
+      <div class="wrap">
+        <div class="head"><h2 id="h-guests">Every guest, one tile</h2><p>Like an element: an ID, a two-letter symbol, a name and a role. Hover or tap a tile to see where it sits in the diagram.</p></div>
+        <div id="tiles-slot" set:html={legend() + tileGrid(d.guests)} />
+      </div>
+    </section>
+
+    <section id="status" aria-labelledby="h-status" class="reveal">
+      <div class="wrap">
+        <div class="head"><h2 id="h-status">Live status</h2><p>Straight from the running lab, sanitized before it leaves.</p></div>
+        <div class="board" id="board-slot" set:html={statusBoard(d)} />
+      </div>
+    </section>
+
+    <section id="work" aria-labelledby="h-work" class="reveal">
+      <div class="wrap">
+        <div class="head"><h2 id="h-work">Case studies</h2><p>Problems I solved while building the lab, and the decisions behind them.</p></div>
+        {studies.length ? (
+          <div class="studies">
+            {studies.map(({ e }) => (
+              <button type="button" class="card study" data-open={`cs-${e.id}`}>
+                {e.data.metric && <span class="chip mono">{e.data.metric}</span>}
+                <h3>{e.data.title}</h3>
+                <p>{e.data.summary}</p>
+                <span class="study-stack">{e.data.stack.slice(0, 3).map((s) => <span class="chip">{s}</span>)}</span>
+                <span class="study-more">Read the case study</span>
+              </button>
+            ))}
+          </div>
+        ) : <p class="muted">Case studies are on the way.</p>}
+        {studies.map(({ e, Content }) => (
+          <dialog class="sheet" id={`cs-${e.id}`} aria-labelledby={`cs-${e.id}-t`}>
+            <div class="sheet-in">
+              <button type="button" class="icon-btn sheet-close" data-close aria-label="Close case study"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+              {e.data.metric && <span class="chip mono">{e.data.metric}</span>}
+              <h3 id={`cs-${e.id}-t`}>{e.data.title}</h3>
+              <p class="sheet-sum">{e.data.summary}</p>
+              <div class="prose"><Content /></div>
+              <p class="sheet-stack">{e.data.stack.map((s) => <span class="chip">{s}</span>)}</p>
+            </div>
+          </dialog>
+        ))}
+      </div>
+    </section>
+
+    <section id="timeline" aria-labelledby="h-time" class="reveal">
+      <div class="wrap">
+        <div class="head"><h2 id="h-time">Build timeline</h2><p>How the lab got to where it is, in order.</p></div>
+        {timeline.length ? (
+          <ol class="timeline">
+            {timeline.map((t) => (
+              <li><time class="num" datetime={t.date}>{shortDate(t.date)}</time><h3>{t.title}</h3><p>{t.detail}</p></li>
+            ))}
+          </ol>
+        ) : <p class="muted">Timeline coming soon.</p>}
+      </div>
+    </section>
+
+    <section id="lessons" aria-labelledby="h-less" class="reveal">
+      <div class="wrap">
+        <div class="head"><h2 id="h-less">Lessons learned</h2><p>Things that broke, why they broke, and what changed afterwards.</p></div>
+        {lessons.length ? (
+          <div class="lessons">
+            {lessons.map(({ e, Content }) => (
+              <details class="card lesson">
+                <summary>
+                  <span class="lesson-date num">{shortDate(String(e.data.date))}</span>
+                  <span class="lesson-title">{e.data.title}</span>
+                  <span class="lesson-sum">{e.data.summary}</span>
+                </summary>
+                <div class="prose"><Content /></div>
+              </details>
+            ))}
+          </div>
+        ) : <p class="muted">Lessons coming soon.</p>}
+      </div>
+    </section>
+
+    <section id="stack" aria-labelledby="h-stack" class="reveal">
+      <div class="wrap">
+        <div class="head"><h2 id="h-stack">Tech stack</h2></div>
+        <ul class="stack">{stack.map((s) => <li>{s}</li>)}</ul>
+      </div>
+    </section>
+
+    <section id="about" aria-labelledby="h-about" class="reveal">
+      <div class="wrap">
+        <div class="card about">
+          <img src="/assets/brian.jpg" alt="Portrait of Brian Nguyen" width="112" height="112" loading="lazy" />
+          <div>
+            <h2 id="h-about">Brian Nguyen</h2>
+            <p class="about-sub">Software Engineer &middot; UC San Diego Math&ndash;CS &middot; San Jose, CA</p>
+            <p class="about-open"><span class="dot" data-status="up" aria-hidden="true"></span>Open to full-time software engineering roles</p>
+            <p class="about-body">I build full-stack apps, AI-powered tools and machine learning projects. This lab is where I practise infrastructure, observability and AI agents end to end.</p>
+            <p class="about-links">
+              <a class="btn primary" href="https://www.linkedin.com/in/brian-nguyen-swe/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a class="btn" href="https://github.com/NairbN" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="btn" href="/assets/brian-nguyen-resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="foot">
+    <div class="wrap">
+      <p>Live data is a sanitized snapshot pushed out from the lab; nothing on the internet connects into it.</p>
+      <p class="num">Data last updated <time id="foot-updated" datetime={d.generated_at}>{shortDate(d.generated_at)}</time></p>
+    </div>
+  </footer>
+  <script>
+    import '../../client/public';
+  </script>
+</Base>

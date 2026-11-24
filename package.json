@@ -1,0 +1,20 @@
+{
+  "name": "heisenberg-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heisenberg Lab: a homelab showcase with a public and an internal build from one codebase.",
+  "scripts": {
+    "dev:public": "BUILD_TARGET=public astro dev",
+    "dev:internal": "BUILD_TARGET=internal astro dev",
+    "build:public": "BUILD_TARGET=public astro build",
+    "build:internal": "BUILD_TARGET=internal astro build",
+    "build": "npm run build:public && npm run build:internal",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.1.0",
+    "@fontsource/jetbrains-mono": "^5.1.0",
+    "astro": "5.18.2"
+  }
+}
