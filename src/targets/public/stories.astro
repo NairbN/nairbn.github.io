@@ -1,0 +1,90 @@
+---
+import { getCollection, render } from 'astro:content';
+import PublicPage from '../../layouts/PublicPage.astro';
+import { shortDate } from '../../lib/fmt';
+
+const studies = await Promise.all(
+  (await getCollection('case-studies')).sort((a, b) => a.data.order - b.data.order).map(async (e) => ({ e, Content: (await render(e)).Content })),
+);
+const lessons = await Promise.all(
+  (await getCollection('lessons')).sort((a, b) => String(b.data.date).localeCompare(String(a.data.date))).map(async (e) => ({ e, Content: (await render(e)).Content })),
+);
+const tlFiles = Object.values(import.meta.glob('../../content/timeline.json', { eager: true, import: 'default' })) as { date: string; title: string; detail: string }[][];
+const timeline = (tlFiles[0] ?? []).slice().sort((a, b) => a.date.localeCompare(b.date));
+---
+<PublicPage page="stories" path="/stories/" title="Stories | Heisenberg Lab" description="Case studies, a build timeline and the lessons learned while building Heisenberg Lab.">
+  <main id="main" class="page">
+    <div class="wrap">
+      <div class="page-head pad-t">
+        <div class="intro">
+          <h1 class="h1">Stories</h1>
+          <p class="lede" style="max-width:600px">What I built, how the lab got here, and what broke along the way.</p>
+        </div>
+      </div>
+
+      <section class="sec" aria-labelledby="h-work">
+        <div class="pad-t"><h2 class="sec-h" id="h-work">Case studies</h2><p class="sec-sub">Problems I solved while building the lab, and the decisions behind them.</p></div>
+        <div class="sec-body">
+          {studies.length ? (
+            <div class="cs-grid">
+              {studies.map(({ e }) => (
+                <button type="button" class="cs glass" data-open={`cs-${e.id}`} aria-haspopup="dialog">
+                  {e.data.metric && <span class="chip metric">{e.data.metric}</span>}
+                  <h3>{e.data.title}</h3>
+                  <p>{e.data.summary}</p>
+                  <span class="chips">{e.data.stack.slice(0, 3).map((s) => <span class="chip">{s}</span>)}</span>
+                  <span class="cs-more">Read the case study</span>
+                </button>
+              ))}
+            </div>
+          ) : <p class="sec-sub">Case studies are on the way.</p>}
+        </div>
+        {studies.map(({ e, Content }) => (
+          <dialog class="sheet" id={`cs-${e.id}`} aria-labelledby={`cs-${e.id}-t`}>
+            <div class="sheet-in">
+              <button type="button" class="icon-btn sheet-close" data-close aria-label="Close case study"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+              {e.data.metric && <span class="chip metric">{e.data.metric}</span>}
+              <h3 id={`cs-${e.id}-t`}>{e.data.title}</h3>
+              <p class="sheet-sum">{e.data.summary}</p>
+              <div class="prose"><Content /></div>
+              <p class="chips">{e.data.stack.map((s) => <span class="chip">{s}</span>)}</p>
+            </div>
+          </dialog>
+        ))}
+      </section>
+
+      <section class="sec" aria-labelledby="h-time">
+        <div class="pad-t"><h2 class="sec-h" id="h-time">Build timeline</h2><p class="sec-sub">How the lab got to where it is, in order.</p></div>
+        <div class="sec-body">
+          {timeline.length ? (
+            <ol class="tl">
+              {timeline.map((t) => (
+                <li class="plate"><time datetime={t.date}>{shortDate(t.date)}</time><h3>{t.title}</h3><p>{t.detail}</p></li>
+              ))}
+            </ol>
+          ) : <p class="sec-sub">Timeline coming soon.</p>}
+        </div>
+      </section>
+
+      <section class="sec" aria-labelledby="h-less">
+        <div class="pad-t"><h2 class="sec-h" id="h-less">Lessons learned</h2><p class="sec-sub">Things that broke, why they broke, and what changed afterwards.</p></div>
+        <div class="sec-body">
+          {lessons.length ? (
+            <div class="ls">
+              {lessons.map(({ e, Content }) => (
+                <details class="lesson plate">
+                  <summary>
+                    <span class="lesson-d">{shortDate(String(e.data.date))}</span>
+                    <span class="lesson-t">{e.data.title}</span>
+                    <span class="lesson-s">{e.data.summary}</span>
+                  </summary>
+                  <div class="prose"><Content /></div>
+                </details>
+              ))}
+            </div>
+          ) : <p class="sec-sub">Lessons coming soon.</p>}
+        </div>
+      </section>
+    </div>
+  </main>
+</PublicPage>

@@ -1,0 +1,23 @@
+---
+import PublicPage from '../../layouts/PublicPage.astro';
+---
+<PublicPage page="about" path="/about/" title="About | Heisenberg Lab" description="Brian Nguyen, software engineer (UC San Diego Math-CS) in San Jose, open to full-time software engineering roles.">
+  <main id="main" class="page">
+    <div class="wrap">
+      <section class="about glass" aria-labelledby="about-h">
+        <img src="/assets/brian.jpg" alt="Portrait of Brian Nguyen" width="148" height="148" />
+        <div>
+          <h1 id="about-h">Brian Nguyen</h1>
+          <p class="about-role">Software engineer. UC San Diego, Math&ndash;Computer Science. Based in San Jose, California.</p>
+          <p class="about-open"><span class="dot" aria-hidden="true"></span>Open to full-time software engineering roles</p>
+          <p class="about-body">I build full-stack apps, AI-powered tools and machine learning projects. Heisenberg Lab is where I practise infrastructure, monitoring and AI agents end to end: a real homelab that I run, break and fix.</p>
+          <p class="about-links">
+            <a class="btn-solid" href="https://www.linkedin.com/in/brian-nguyen-swe/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a class="btn-ghost" href="https://github.com/NairbN" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="btn-ghost" href="/assets/brian-nguyen-resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+</PublicPage>

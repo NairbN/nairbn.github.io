@@ -1,17 +1,11 @@
-import { initTheme } from './theme';
-import { initReveal, countUp, wireHighlight } from './ui';
-import { heroCounters, statusBoard } from '../lib/public-render';
-import { legend, tileGrid } from '../lib/tiles';
-import { diagramPair } from '../lib/diagram';
-import { shortDate, ageMinutes } from '../lib/fmt';
+// Public site runtime. Same-origin plus one fetch: the sanitized status snapshot on raw.githubusercontent.com.
+import { initShell } from './shell';
+import { RENDERERS } from '../lib/views';
+import { ageMinutes, shortDate } from '../lib/fmt';
 import type { PublicData } from '../lib/types';
 
 const LIVE_URL = 'https://raw.githubusercontent.com/NairbN/NairbN.github.io/status/public.json';
 const REFRESH_MS = 5 * 60 * 1000;
-const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
-
-let mode: 'live' | 'snapshot' = 'snapshot';
-let generatedAt: string | null = null;
 
 const isObj = (v: unknown): v is Record<string, any> => typeof v === 'object' && v !== null && !Array.isArray(v);
 const num = (v: unknown) => typeof v === 'number' && Number.isFinite(v);
@@ -35,36 +29,24 @@ const valid = (d: any): d is PublicData => {
     typeof g.secret === 'boolean' && typeof g.category === 'string' && typeof g.status === 'string');
 };
 
-function bind(d: PublicData) {
-  document.querySelectorAll<HTMLElement>('[data-bind]').forEach((el) => {
-    const v = el.dataset.bind!.split('.').reduce<any>((o, k) => (o == null ? o : o[k]), d);
-    if (v !== undefined && v !== null) el.textContent = String(v);
-  });
-}
-
 function render(d: PublicData) {
-  generatedAt = d.generated_at;
-  $('hero-counters')!.innerHTML = heroCounters(d);
-  $('board-slot')!.innerHTML = statusBoard(d);
-  $('diagram-slot')!.innerHTML = diagramPair(d.guests, false);
-  $('tiles-slot')!.innerHTML = legend() + tileGrid(d.guests);
-  const f = $('foot-updated');
+  document.querySelectorAll<HTMLElement>('[data-render]').forEach((el) => {
+    const fn = RENDERERS[el.dataset.render ?? ''];
+    if (fn) el.innerHTML = fn(d, false);
+  });
+  const f = document.querySelector<HTMLTimeElement>('[data-updated]');
   if (f) { f.textContent = shortDate(d.generated_at); f.setAttribute('datetime', d.generated_at); }
-  bind(d);
-  hl?.refresh();
+  tickAge();
 }
 
-function badge() {
-  const b = $('live-badge'), t = $('live-text');
-  if (!b || !t) return;
-  b.dataset.mode = mode;
-  b.querySelector('.dot')!.setAttribute('data-status', mode === 'live' ? 'up' : 'stopped');
-  if (mode === 'live') {
-    const m = ageMinutes(generatedAt);
-    t.textContent = m === null ? 'Live' : m < 1 ? 'Live · updated just now' : m < 60 ? `Live · updated ${Math.round(m)} min ago` : `Live · updated ${Math.round(m / 60)} h ago`;
-  } else {
-    t.textContent = 'Snapshot';
-  }
+/** "Updated N min ago": recomputed from the snapshot time, so it stays honest while the tab is open. */
+function tickAge() {
+  document.querySelectorAll<HTMLTimeElement>('time[data-age]').forEach((t) => {
+    const m = ageMinutes(t.getAttribute('datetime'));
+    t.textContent = m === null ? 'recently' : m < 1 ? 'just now' : m < 60 ? `${Math.round(m)} min ago` : m < 60 * 48 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`;
+    const dot = t.closest('.pill')?.querySelector('[data-age-dot]');
+    dot?.setAttribute('data-s', m !== null && m <= 90 ? 'ok' : 'stale');
+  });
 }
 
 async function fetchLive() {
@@ -76,20 +58,12 @@ async function fetchLive() {
     const d = await r.json();
     if (!valid(d)) throw new Error('bad schema');
     render(d);
-    mode = 'live';
   } catch {
     /* silent: keep whatever is on screen (the baked snapshot, or the last live copy) */
   } finally {
     clearTimeout(timer);
-    badge();
   }
 }
-
-initTheme();
-initReveal();
-const hl = wireHighlight(document.getElementById('main')!);
-badge();
-countUp(document.getElementById('hero-counters')!);
 
 // case study dialogs
 document.addEventListener('click', (e) => {
@@ -97,27 +71,20 @@ document.addEventListener('click', (e) => {
   const open = t.closest<HTMLElement>('[data-open]');
   if (open) {
     const dlg = document.getElementById(open.dataset.open!) as HTMLDialogElement | null;
-    if (dlg && typeof dlg.showModal === 'function') { dlg.showModal(); document.documentElement.style.overflow = 'hidden'; }
+    if (dlg && typeof dlg.showModal === 'function') dlg.showModal();
     return;
   }
   const dlg = t.closest('dialog');
   if (dlg && (t.closest('[data-close]') || t === dlg)) (dlg as HTMLDialogElement).close();
 });
-document.querySelectorAll('dialog').forEach((d) => d.addEventListener('close', () => { document.documentElement.style.overflow = ''; }));
 
-// nav scroll-spy
-const links = [...document.querySelectorAll<HTMLAnchorElement>('.nav-links a')];
-if ('IntersectionObserver' in window) {
-  const spy = new IntersectionObserver((es) => {
-    for (const en of es) if (en.isIntersecting) links.forEach((a) => { if (a.hash === `#${en.target.id}`) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  document.querySelectorAll('main section[id]').forEach((s) => spy.observe(s));
-}
+initShell();
+tickAge();
+setInterval(tickAge, 30_000);
 
-// live refresh: now, then every 5 minutes while visible
+// live refresh: now, then every 5 minutes while the tab is visible
 fetchLive();
 let timer: number | undefined;
 const schedule = () => { window.clearInterval(timer); if (!document.hidden) timer = window.setInterval(fetchLive, REFRESH_MS); };
 document.addEventListener('visibilitychange', () => { if (!document.hidden) fetchLive(); schedule(); });
 schedule();
-window.setInterval(badge, 30000);

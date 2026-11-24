@@ -4,3 +4,4 @@ dist-internal/
 .astro/
 _quarantine/
 *.log
+design/

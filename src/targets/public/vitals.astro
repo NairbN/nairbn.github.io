@@ -1,0 +1,25 @@
+---
+import PublicPage from '../../layouts/PublicPage.astro';
+import { loadPublic } from '../../lib/load-data';
+import type { PublicData } from '../../lib/types';
+import * as V from '../../lib/views';
+const d = loadPublic() as unknown as PublicData;
+---
+<PublicPage page="vitals" path="/vitals/" title="Vitals | Heisenberg Lab" description="Live numbers from the Heisenberg Lab host: CPU, memory, GPU memory, 30-day uptime and how the lab is looked after.">
+  <main id="main" class="page">
+    <div class="wrap">
+      <div class="page-head pad-t">
+        <div class="intro">
+          <h1 class="h1">Vitals</h1>
+          <p class="lede">Live numbers from the host, refreshed every few minutes.</p>
+        </div>
+        <div class="pill glass" data-render="pillUpdated" set:html={V.pillUpdated(d)} />
+      </div>
+      <div class="v-grid">
+        <section class="v-card vb-card glass" aria-label="Host load" data-render="vitalsBig" set:html={V.vitalsBig(d)} />
+        <section class="v-card up-card glass" aria-label="30-day uptime" data-render="vitalsUptime" set:html={V.vitalsUptime(d)} />
+      </div>
+      <div class="ops-strip strip glass" role="group" aria-label="Operations" data-render="vitalsOps" set:html={V.vitalsOps(d)} />
+    </div>
+  </main>
+</PublicPage>

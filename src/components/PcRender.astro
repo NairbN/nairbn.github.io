@@ -1,0 +1,75 @@
+---
+/**
+ * PcRender: a CSS-only approximation of the heisenberg tower (330 x 500 design units).
+ *
+ * TODO(brian): replace this with a real photo of the machine. To swap: delete the markup inside
+ * <div class="pc-art"> and put an <img src="/assets/heisenberg.jpg" alt="..." width="330" height="500"> there
+ * (a transparent PNG/WebP cut-out looks best over the blurred backdrop). The wrapper keeps the size, the glow,
+ * the phone scaling and the accessible name, so nothing else on the page needs to change. See README, "Swapping in a real photo".
+ */
+---
+<div class="pc" role="img" aria-label="Rendering of heisenberg, a glass-sided tower PC with a tower CPU cooler, four memory sticks and the Radeon GPU">
+  <div class="pc-art">
+
+    <div aria-hidden="true" style="position: absolute; left: 30px; right: 30px; top: 60px; bottom: 60px; border-radius: 40px; background: #34d399; filter: blur(80px); opacity: var(--tower-glow);"></div>
+    <div aria-hidden="true" style="position: absolute; left: 20px; right: 0; bottom: 0; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.55); filter: blur(14px);"></div>
+    <div aria-hidden="true" style="position: absolute; left: 44px; bottom: 10px; width: 34px; height: 10px; border-radius: 3px; background: #0d0f12;"></div>
+    <div aria-hidden="true" style="position: absolute; right: 26px; bottom: 10px; width: 34px; height: 10px; border-radius: 3px; background: #0d0f12;"></div>
+
+    <div aria-hidden="true" style="position: absolute; left: 14px; right: 10px; top: 0; bottom: 18px; border-radius: 14px; background: linear-gradient(170deg, #3b4048 0%, #22262c 45%, #15181c 100%); border: 1px solid rgba(255,255,255,0.14); border-top-color: rgba(255,255,255,0.32); box-shadow: 0 40px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);">
+
+      <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 30px; border-radius: 14px 0 0 14px; background: radial-gradient(circle, rgba(255,255,255,0.13) 1px, rgba(0,0,0,0) 1.6px) 0 0 / 6px 6px, linear-gradient(180deg, #2a2e34, #16191d); border-right: 1px solid rgba(0,0,0,0.6);">
+        <div style="position: absolute; left: 9px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: #1b1e22; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 0 8px rgba(74,222,128,0.8), inset 0 0 4px rgba(74,222,128,0.9);"></div>
+        <div style="position: absolute; left: 11px; top: 36px; width: 8px; height: 4px; border-radius: 2px; background: #0b0d10;"></div>
+      </div>
+
+      <div style="position: absolute; left: 36px; right: 10px; top: 12px; bottom: 12px; border-radius: 6px; overflow: hidden; background: linear-gradient(180deg, #0f1317 0%, #0a0d10 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 30px rgba(0,0,0,0.8);">
+
+        <div style="position: absolute; left: 6px; top: 26px; width: 58px; height: 58px; border-radius: 50%; background: conic-gradient(from 10deg, #2a3038, #11151a 25%, #2a3038 50%, #11151a 75%, #2a3038); border: 3px solid #1d2228; box-shadow: 0 0 0 1px rgba(255,255,255,0.06);"><div style="position: absolute; left: 21px; top: 21px; width: 10px; height: 10px; border-radius: 50%; background: #0c0f12;"></div></div>
+        <div style="position: absolute; left: 6px; top: 92px; width: 58px; height: 58px; border-radius: 50%; background: conic-gradient(from 50deg, #2a3038, #11151a 25%, #2a3038 50%, #11151a 75%, #2a3038); border: 3px solid #1d2228; box-shadow: 0 0 0 1px rgba(255,255,255,0.06);"><div style="position: absolute; left: 21px; top: 21px; width: 10px; height: 10px; border-radius: 50%; background: #0c0f12;"></div></div>
+        <div style="position: absolute; left: 6px; top: 158px; width: 58px; height: 58px; border-radius: 50%; background: conic-gradient(from 80deg, #2a3038, #11151a 25%, #2a3038 50%, #11151a 75%, #2a3038); border: 3px solid #1d2228; box-shadow: 0 0 0 1px rgba(255,255,255,0.06);"><div style="position: absolute; left: 21px; top: 21px; width: 10px; height: 10px; border-radius: 50%; background: #0c0f12;"></div></div>
+
+        <div style="position: absolute; left: 76px; right: 8px; top: 10px; height: 290px; border-radius: 4px; background: linear-gradient(0deg, rgba(255,255,255,0.025) 1px, rgba(0,0,0,0) 1px) 0 0 / 100% 14px, linear-gradient(90deg, rgba(255,255,255,0.02) 1px, rgba(0,0,0,0) 1px) 0 0 / 14px 100%, #161a1f; border: 1px solid rgba(255,255,255,0.06);"></div>
+
+        <div style="position: absolute; right: 14px; top: 16px; width: 50px; height: 50px; border-radius: 6px; background: #1a1f25; border: 1px solid rgba(255,255,255,0.08);"><div style="position: absolute; left: 4px; top: 4px; width: 42px; height: 42px; border-radius: 50%; background: conic-gradient(from 30deg, #2c333b, #12161b 25%, #2c333b 50%, #12161b 75%, #2c333b);"></div></div>
+
+        <div style="position: absolute; left: 96px; top: 54px; width: 62px; height: 92px; border-radius: 4px; background: repeating-linear-gradient(180deg, #c9ced6 0 2px, #6b727c 2px 5px); box-shadow: 0 6px 14px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.2);"></div>
+        <div style="position: absolute; left: 88px; top: 60px; width: 10px; height: 80px; border-radius: 3px; background: #1d2228; border: 1px solid rgba(255,255,255,0.08);"></div>
+        <div style="position: absolute; left: 112px; top: 64px; width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle, #2f363e 30%, #1b2026 70%); box-shadow: 0 0 0 2px rgba(0,0,0,0.4);"></div>
+
+        <div style="position: absolute; left: 170px; top: 48px; width: 6px; height: 88px; border-radius: 2px; background: linear-gradient(180deg, #4ade80 0 6px, #2a3038 6px);"></div>
+        <div style="position: absolute; left: 180px; top: 48px; width: 6px; height: 88px; border-radius: 2px; background: linear-gradient(180deg, #4ade80 0 6px, #2a3038 6px);"></div>
+        <div style="position: absolute; left: 190px; top: 48px; width: 6px; height: 88px; border-radius: 2px; background: linear-gradient(180deg, #4ade80 0 6px, #2a3038 6px);"></div>
+        <div style="position: absolute; left: 200px; top: 48px; width: 6px; height: 88px; border-radius: 2px; background: linear-gradient(180deg, #4ade80 0 6px, #2a3038 6px);"></div>
+
+        <div style="position: absolute; left: 98px; top: 160px; width: 46px; height: 12px; border-radius: 2px; background: linear-gradient(90deg, #3a414a, #252a31); border: 1px solid rgba(255,255,255,0.08);"></div>
+
+        <div style="position: absolute; left: 82px; right: 6px; top: 186px; height: 46px; border-radius: 5px; background: linear-gradient(180deg, #2b3139 0%, #15191e 100%); border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 10px 22px rgba(0,0,0,0.7), 0 0 26px rgba(74,222,128,0.25);">
+          <div style="position: absolute; left: 10px; right: 54px; top: 9px; height: 16px; border-radius: 3px; background: repeating-linear-gradient(90deg, #3d444d 0 2px, #1c2026 2px 6px);"></div>
+          <div style="position: absolute; right: 10px; top: 7px; width: 32px; height: 32px; border-radius: 50%; background: conic-gradient(from 0deg, #333a43, #15191e 25%, #333a43 50%, #15191e 75%, #333a43); border: 2px solid #20252b;"></div>
+          <div style="position: absolute; left: 10px; right: 54px; bottom: 7px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, rgba(74,222,128,0), #4ade80 40%, rgba(74,222,128,0));"></div>
+        </div>
+        <div style="position: absolute; left: 82px; right: 6px; top: 244px; height: 3px; background: #22272e;"></div>
+        <div style="position: absolute; left: 82px; right: 30px; top: 262px; height: 3px; background: #22272e;"></div>
+
+        <div style="position: absolute; right: 6px; top: 82px; width: 10px; height: 96px; border-radius: 5px; background: repeating-linear-gradient(180deg, #2a2f36 0 3px, #1a1e23 3px 6px);"></div>
+
+        <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 96px; background: linear-gradient(180deg, #20252b, #14171b); border-top: 1px solid rgba(255,255,255,0.12);">
+          <div style="position: absolute; left: 14px; right: 14px; top: 16px; height: 6px; background: repeating-linear-gradient(90deg, #0c0e11 0 8px, rgba(0,0,0,0) 8px 12px);"></div>
+          <div style="position: absolute; left: 16px; bottom: 16px; display: flex; align-items: center; gap: 7px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, system-ui, sans-serif; font-size: 11px; font-weight: 600; color: rgba(245,245,247,0.86);"><span style="width: 7px; height: 7px; border-radius: 50%; background: #30d158; box-shadow: 0 0 8px #30d158;"></span>heisenberg</div>
+        </div>
+
+        <div style="position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 22%, rgba(255,255,255,0) 34%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.05) 72%, rgba(255,255,255,0) 80%);"></div>
+      </div>
+    </div>
+  
+  </div>
+</div>
+<style>
+  .pc { position: relative; width: 330px; height: 500px; flex: none; }
+  .pc-art { position: absolute; inset: 0; }
+  @media (max-width: 899.98px) {
+    .pc { width: 264px; height: 400px; margin-inline: auto; }
+    .pc-art { width: 330px; height: 500px; transform: scale(0.8); transform-origin: 0 0; }
+  }
+</style>

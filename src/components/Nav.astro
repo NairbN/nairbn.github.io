@@ -1,0 +1,57 @@
+---
+import { THEME_MOON, THEME_SUN, TAB_ICONS } from '../lib/icons';
+interface Props { page: string }
+const { page } = Astro.props;
+const pages = [
+  { key: 'home', href: '/', label: 'Overview' },
+  { key: 'services', href: '/services/', label: 'Services' },
+  { key: 'vitals', href: '/vitals/', label: 'Vitals' },
+  { key: 'hardware', href: '/hardware/', label: 'Hardware' },
+  { key: 'stories', href: '/stories/', label: 'Stories' },
+  { key: 'about', href: '/about/', label: 'About' },
+];
+const tabs = pages.slice(0, 4);
+const more = pages.slice(4);
+const cur = (k: string) => (k === page ? 'page' : undefined);
+const RESUME = '/assets/brian-nguyen-resume.pdf';
+---
+<header>
+  <div class="nav glass">
+    <a class="brand" href="/" aria-label="Heisenberg Lab, overview">Heisenberg Lab</a>
+    <nav class="seg" aria-label="Pages">
+      {pages.map((p) => <a href={p.href} aria-current={cur(p.key)}>{p.label}</a>)}
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch theme">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_SUN} /></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_MOON} /></svg>
+      </button>
+      <a class="btn-solid nav-resume" href={RESUME} target="_blank" rel="noopener">Résumé</a>
+    </div>
+  </div>
+
+  <div class="bar glass">
+    <a class="brand" href="/" aria-label="Heisenberg Lab, overview">Heisenberg Lab</a>
+    <div class="bar-actions">
+      <details class="more" data-more>
+        <summary class="icon-btn" aria-label="More pages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={TAB_ICONS.more} stroke-width="2.6" /></svg></summary>
+        <div class="more-menu glass">
+          {more.map((p) => <a href={p.href} aria-current={cur(p.key)}>{p.label}</a>)}
+          <a href={RESUME} target="_blank" rel="noopener">Résumé</a>
+        </div>
+      </details>
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch theme">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_SUN} /></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_MOON} /></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav class="tabbar glass" aria-label="Main">
+    {tabs.map((p) => (
+      <a href={p.href} aria-current={cur(p.key)}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d={TAB_ICONS[p.key === 'home' ? 'home' : (p.key as 'services' | 'vitals' | 'hardware')]} /></svg>{p.label}
+      </a>
+    ))}
+  </nav>
+</header>

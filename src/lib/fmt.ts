@@ -53,7 +53,7 @@ export function mb(v: unknown): string {
   return v >= 1024 ? `${(v / 1024).toFixed(1)} GB` : `${Math.round(v)} MB`;
 }
 
-export function shortDate(iso: string | undefined): string {
+export function shortDate(iso: string | null | undefined): string {
   if (!iso) return DASH;
   const d = new Date(iso.length === 7 ? `${iso}-01T00:00:00Z` : iso);
   if (Number.isNaN(d.getTime())) return iso;

@@ -1,0 +1,29 @@
+---
+import { PHOTOS, PERIODS } from '../lib/photos';
+import { shortDate } from '../lib/fmt';
+interface Props { generated?: string }
+const { generated } = Astro.props;
+---
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-card glass">
+      <p>Live data is a sanitized snapshot pushed out from the lab; nothing on the internet connects into it.</p>
+      <p>Data last updated <strong><time data-updated datetime={generated ?? ""}>{shortDate(generated)}</time></strong></p>
+      <section class="credits" aria-labelledby="credits-h">
+        <h2 id="credits-h">Photo credits</h2>
+        <ul>
+          {PERIODS.map((p) => {
+            const ph = PHOTOS[p];
+            return (
+              <li>
+                <strong>{ph.label}, {ph.place}:</strong> &ldquo;{ph.title}&rdquo; by {ph.author}, licensed
+                <a href={ph.licenseUrl} target="_blank" rel="noopener noreferrer"> {ph.license}</a>.
+                <a href={ph.commons} target="_blank" rel="noopener noreferrer"> View on Wikimedia Commons</a>.
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    </div>
+  </div>
+</footer>

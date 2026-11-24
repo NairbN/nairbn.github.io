@@ -1,18 +1,41 @@
 ---
 import '@fontsource-variable/inter/opsz.css';
-import '@fontsource/jetbrains-mono/400.css';
-import '@fontsource/jetbrains-mono/500.css';
-import '../styles/tokens.css';
-import '../styles/base.css';
+import '../styles/ds.css';
+import { PHOTOS, PERIODS } from '../lib/photos';
 
-interface Props { title: string; description?: string; canonical?: string; ogImage?: string; extraCss?: 'public' | 'internal'; robots?: string }
-const { title, description = '', canonical, ogImage, robots } = Astro.props;
+interface Props { title: string; description?: string; canonical?: string; ogImage?: string; robots?: string; page: string }
+const { title, description = '', canonical, ogImage, robots, page } = Astro.props;
+
+// Photo files + alt text for the inline script. Same-origin only: the internal build bundles these locally.
+const photoMap = Object.fromEntries(PERIODS.map((p) => [p, { f: `/backdrops/${p}`, alt: PHOTOS[p].alt }]));
+const boot = `(function(){
+  var d=document.documentElement,P=${JSON.stringify(photoMap)};
+  function period(){var h=new Date().getHours();return h>=5&&h<11?'morning':h>=11&&h<18?'midday':'night';}
+  try{
+    var q=new URLSearchParams(location.search).get('theme');
+    var t=(q==='dark'||q==='light')?q:localStorage.getItem('hl-theme');
+    if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+    d.setAttribute('data-theme',t);
+  }catch(e){d.setAttribute('data-theme','dark');}
+  d.classList.add('js');
+  var cur=period();d.setAttribute('data-period',cur);
+  function put(layer,p,first){
+    var imgs=layer.querySelectorAll('img'),on=layer.querySelector('img.on'),n=(on&&on===imgs[0])?imgs[1]:imgs[0],blur=layer.hasAttribute('data-blur'),f=P[p].f;
+    n.srcset=blur?(f+'-1200.jpg 1200w'):(f+'-1200.jpg 1200w, '+f+'-2400.jpg 2400w');n.sizes='100vw';n.src=f+'-1200.jpg';
+    n.alt=blur?'':P[p].alt;n.setAttribute('aria-hidden',blur?'true':'false');
+    var show=function(){n.classList.add('on');if(on&&on!==n){on.classList.remove('on');on.setAttribute('aria-hidden','true');}};
+    if(first){show();}else if(n.decode){n.decode().then(show,show);}else{n.onload=show;}
+  }
+  function apply(p,first){document.querySelectorAll('[data-bd]').forEach(function(l){put(l,p,first);});}
+  window.hlBackdrop={init:function(){apply(cur,true);},
+    tick:function(){var p=period();if(p!==cur){cur=p;d.setAttribute('data-period',p);apply(p,false);}}};
+})();`;
 ---
 <!doctype html>
-<html lang="en" data-target={__TARGET__}>
+<html lang="en" data-target={__TARGET__} data-page={page} data-theme="dark">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     {robots && <meta name="robots" content={robots} />}
@@ -29,26 +52,20 @@ const { title, description = '', canonical, ogImage, robots } = Astro.props;
         {ogImage && <meta property="og:image" content={ogImage} />}
         {ogImage && <meta property="og:image:width" content="1200" />}
         {ogImage && <meta property="og:image:height" content="630" />}
-        {ogImage && <meta property="og:image:alt" content="Heisenberg Lab: a self-hosted lab, shown as a periodic table of guests." />}
+        {ogImage && <meta property="og:image:alt" content="Heisenberg Lab, a self-hosted homelab, over a glass-lit city skyline." />}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         {ogImage && <meta name="twitter:image" content={ogImage} />}
       </>
     )}
-    <script is:inline>
-      (function () {
-        var r = document.documentElement;
-        r.classList.add('js');
-        try {
-          var q = new URLSearchParams(location.search).get('theme');
-          var t = q === 'dark' || q === 'light' ? q : localStorage.getItem('hl-theme');
-          if (t === 'dark' || t === 'light') r.setAttribute('data-theme', t);
-        } catch (e) {}
-      })();
-    </script>
+    <script is:inline set:html={boot}></script>
   </head>
   <body>
+    <div class="stage" data-bd data-blur aria-hidden="true"><img alt="" /><img alt="" /></div>
+    <div class="top" data-bd><img alt="" /><img alt="" /></div>
+    <div class="veil" aria-hidden="true"></div>
+    <script is:inline>window.hlBackdrop && window.hlBackdrop.init();</script>
     <a class="skip" href="#main">Skip to content</a>
     <slot />
   </body>

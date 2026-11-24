@@ -1,0 +1,21 @@
+---
+import PublicPage from '../../layouts/PublicPage.astro';
+import { loadPublic } from '../../lib/load-data';
+import type { PublicData } from '../../lib/types';
+import * as V from '../../lib/views';
+const d = loadPublic() as unknown as PublicData;
+---
+<PublicPage page="services" path="/services/" title="Services | Heisenberg Lab" description="The containers and VMs that make up Heisenberg Lab, each with its job and live status.">
+  <main id="main" class="page">
+    <div class="wrap">
+      <div class="page-head pad-t">
+        <div class="intro">
+          <h1 class="h1">Services</h1>
+          <p class="lede" style="max-width:580px" data-render="servicesLede" set:html={V.servicesLede(d)} />
+        </div>
+        <div class="pill glass" data-render="pillRunning" set:html={V.pillRunning(d)} />
+      </div>
+      <ul class="svc-card glass" aria-label="Services" data-render="servicesGrid" set:html={V.servicesGrid(d)} />
+    </div>
+  </main>
+</PublicPage>

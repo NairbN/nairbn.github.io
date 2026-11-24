@@ -1,0 +1,47 @@
+---
+import PublicPage from '../../layouts/PublicPage.astro';
+import PcRender from '../../components/PcRender.astro';
+import { loadPublic } from '../../lib/load-data';
+import type { PublicData } from '../../lib/types';
+import * as V from '../../lib/views';
+const d = loadPublic() as unknown as PublicData;
+const memGb = typeof d.host?.mem_total_gb === 'number' ? d.host.mem_total_gb : 64;
+const vramGb = typeof d.gpu?.vram_total_gb === 'number' ? d.gpu.vram_total_gb : 32;
+const nSvc = typeof d.lab?.guests_total === 'number' ? d.lab.guests_total : 13;
+const fleet = [
+  { k: 'on', badge: 'Always on', name: 'heisenberg', kind: 'Tower server, main Proxmox host', detail: `10-core Intel, ${memGb} GB, ${vramGb} GB Radeon AI PRO. Runs all ${nSvc} services and the local models.`, short: `Runs all ${nSvc} services and the local models.`, kindShort: 'Tower server, main Proxmox host' },
+  { k: 'build', badge: 'Being built out', name: 'jesse', kind: 'MacBook Pro, second Proxmox node', detail: 'Quad-core i7, 16 GB. Becoming the always-on backup box that can restore the lab if heisenberg dies.', short: 'Becoming the backup box that can restore the lab.', kindShort: 'MacBook Pro, second node' },
+  { k: 'off', badge: 'Retired', name: 'saul', kind: 'MacBook Air', detail: 'Planned as a safety-net box for DNS and remote access; dropped in favor of jesse.', short: 'Planned safety-net box, dropped in favor of jesse.', kindShort: 'MacBook Air' },
+];
+---
+<PublicPage page="hardware" path="/hardware/" title="Hardware | Heisenberg Lab" description="The machines behind Heisenberg Lab: one repurposed tower with a 32 GB GPU, and a spare laptop becoming a second node.">
+  <main id="main" class="page">
+    <div class="wrap">
+      <div class="pad-t">
+        <h1 class="hw-h1">The hardware</h1>
+        <div class="fog-host" style="margin-top:16px">
+          <span class="fog fog-intro" aria-hidden="true"></span>
+          <p class="hw-intro" style="margin-top:0">One repurposed tower runs everything. A spare laptop is being built into a second node so the lab survives the first one going down.</p>
+        </div>
+      </div>
+      <div class="hw-main">
+        <div class="hw-pc"><PcRender /></div>
+        <ul class="hw-specs" aria-label="Specifications" data-render="hardwareSpecs" set:html={V.hardwareSpecs(d)} />
+      </div>
+      <div class="live-strip strip glass glass-strong" role="group" aria-label="Live readings" data-render="hardwareLive" set:html={V.hardwareLive(d)} />
+      <section class="fleet" aria-labelledby="fleet-h">
+        <h2 id="fleet-h">The fleet</h2>
+        <div class="fleet-grid">
+          {fleet.map((f) => (
+            <article class="fleet-card glass" data-off={f.k === 'off' ? '' : undefined}>
+              <span class="badge" data-k={f.k}>{f.badge}</span>
+              <h3 class="fleet-n">{f.name}</h3>
+              <p class="fleet-k"><span class="hide-phone">{f.kind}</span><span class="show-phone">{f.kindShort}</span></p>
+              <p class="fleet-d"><span class="hide-phone">{f.detail}</span><span class="show-phone">{f.short}</span></p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+</PublicPage>
