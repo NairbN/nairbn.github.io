@@ -1,4 +1,44 @@
 ---
 import Base from '../../layouts/Base.astro';
+import InternalNav from '../../components/InternalNav.astro';
+import { loadInternal } from '../../lib/load-data';
+import type { InternalData } from '../../lib/types';
+import * as V from '../../lib/internal-views';
+import '../../styles/public.css';
+import '../../styles/internal.css';
+const d = loadInternal() as unknown as InternalData;
+const sort = { k: 'id' as const, dir: 1 as const };
 ---
-<Base page="internal" title="Heisenberg Lab (internal)" robots="noindex, nofollow"><main id="main" class="page"><div class="wrap"><h1 class="h1">Internal</h1></div></main></Base>
+<Base page="internal" title="Heisenberg Lab (internal)" description="Internal portal" robots="noindex, nofollow">
+  <InternalNav />
+  <main id="main" class="page">
+    <div class="wrap" id="top">
+      <div class="page-head pad-t">
+        <div class="intro"><h1 class="h1">Lab portal</h1><p class="lede">Launcher, live status and health for everything on the host.</p></div>
+      </div>
+
+      <section class="isec" id="launch" aria-labelledby="h-launch"><h2 class="sec-h" id="h-launch">Launcher</h2><div class="launcher" data-slot="linksHtml" set:html={V.linksHtml(d)} /></section>
+
+      <section class="isec" id="apps" aria-labelledby="h-apps"><h2 class="sec-h" id="h-apps">Services</h2><p class="sec-sub">Select one for its address, load and backups.</p>
+        <ul class="svc-card glass" data-slot="appsHtml" set:html={V.appsHtml(d)} /></section>
+
+      <section class="isec" id="vitals" aria-labelledby="h-vit"><h2 class="sec-h" id="h-vit">Host and GPU</h2><div class="vit-grid" data-slot="vitalsHtml" set:html={V.vitalsHtml(d)} /></section>
+
+      <section class="isec" id="guests" aria-labelledby="h-guests"><h2 class="sec-h" id="h-guests">Guests</h2><div class="card glass flush" id="guests-slot" set:html={V.guestTableHtml(d.guests, sort)} /></section>
+
+      <section class="isec two" aria-label="Checks and models">
+        <div class="card glass"><h2 class="card-h">Health checks</h2><p class="cols-head"><span>Status</span><span>Check</span><span>30 days</span><span>Latency</span></p><div data-slot="checksHtml" set:html={V.checksHtml(d)} /></div>
+        <div class="card glass"><h2 class="card-h">AI models</h2><div data-slot="aiHtml" set:html={V.aiHtml(d)} /></div>
+      </section>
+
+      <section class="isec two" id="ops" aria-label="Operations">
+        <div class="card glass"><h2 class="card-h">Ops feed</h2><div class="ops-grid" data-slot="opsHtml" set:html={V.opsHtml(d)} /></div>
+        <div class="card glass"><h2 class="card-h">Expiry watch</h2><div data-slot="expiryHtml" set:html={V.expiryHtml(d)} /></div>
+      </section>
+    </div>
+  </main>
+  <dialog class="sheet" id="panel" aria-labelledby="panel-t"><div class="sheet-in"><button type="button" class="icon-btn sheet-close" data-close aria-label="Close details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button><div id="panel-body"></div></div></dialog>
+  <script>
+    import '../../client/internal';
+  </script>
+</Base>
