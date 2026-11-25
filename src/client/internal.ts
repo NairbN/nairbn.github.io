@@ -5,7 +5,7 @@ import { ageMinutes } from '../lib/fmt';
 import type { InternalData } from '../lib/types';
 
 const DATA_URL = '/data/internal.json';
-const $ = (id: string) => document.getElementById(id)!;
+const $ = (id: string) => document.getElementById(id) as HTMLElement;
 let data: InternalData | null = null;
 let sort: { k: SortKey; dir: 1 | -1 } = { k: 'id', dir: 1 };
 let fetchOk = true;
@@ -20,7 +20,8 @@ function render(d: InternalData) {
     const fn = (IRENDER as Record<string, (d: InternalData, now?: number) => string>)[el.dataset.slot ?? ''];
     if (fn) el.innerHTML = fn(d, now);
   });
-  $('guests-slot').innerHTML = guestTableHtml(d.guests, sort, now);
+  const gs = document.getElementById('guests-slot');
+  if (gs) gs.innerHTML = guestTableHtml(d.guests, sort, now);
 }
 
 function fresh() {
@@ -52,15 +53,31 @@ function openGuest(id: number, from: HTMLElement) {
   if (!g) return;
   opener = from;
   $('panel-body').innerHTML = panelHtml(g);
-  ($('panel') as HTMLDialogElement).showModal();
+  dlg?.showModal();
 }
 
 initShell();
-const dlg = $('panel') as HTMLDialogElement;
-dlg.addEventListener('click', (e) => { if (e.target === dlg || (e.target as HTMLElement).closest('[data-close]')) dlg.close(); });
-dlg.addEventListener('close', () => opener?.focus());
+const dlg = document.getElementById('panel') as HTMLDialogElement | null;
+dlg?.addEventListener('click', (e) => { if (e.target === dlg || (e.target as HTMLElement).closest('[data-close]')) dlg.close(); });
+dlg?.addEventListener('close', () => opener?.focus());
+
+/** Grid / List switch on the Services page; the choice is remembered per browser. */
+function setView(v: 'grid' | 'list') {
+  const g = document.getElementById('view-grid'), l = document.getElementById('view-list');
+  if (!g || !l) return;
+  g.hidden = v !== 'grid'; l.hidden = v !== 'list';
+  document.querySelectorAll<HTMLElement>('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+  try { localStorage.setItem('hl-svc-view', v); } catch { /* storage may be blocked */ }
+}
+if (document.querySelector('[data-view]')) {
+  let v: string | null = null;
+  try { v = localStorage.getItem('hl-svc-view'); } catch { /* ignore */ }
+  setView(v === 'list' ? 'list' : 'grid');
+}
 
 document.addEventListener('click', (e) => {
+  const vb = (e.target as HTMLElement).closest<HTMLElement>('[data-view]');
+  if (vb) { setView(vb.dataset.view === 'list' ? 'list' : 'grid'); return; }
   const app = (e.target as HTMLElement).closest<HTMLElement>('.app[data-id]');
   if (app) { openGuest(Number(app.dataset.id), app); return; }
   const b = (e.target as HTMLElement).closest<HTMLElement>('[data-sort]');

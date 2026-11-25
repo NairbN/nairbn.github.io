@@ -1,0 +1,16 @@
+---
+import InternalPage from '../../layouts/InternalPage.astro';
+import { loadInternal } from '../../lib/load-data';
+import type { InternalData } from '../../lib/types';
+import * as V from '../../lib/internal-views';
+const d = loadInternal() as unknown as InternalData;
+---
+<InternalPage page="ops" title="Ops" heading="Ops" lede="What is firing, what changed, what is waiting, and what expires.">
+  <section class="isec ops-grid2" aria-label="Operations">
+    <div class="card glass" data-slot="opsAlertsHtml" set:html={V.opsAlertsHtml(d)} />
+    <div class="card glass" data-slot="opsBackupHtml" set:html={V.opsBackupHtml(d)} />
+    <div class="card glass" data-slot="opsChangesHtml" set:html={V.opsChangesHtml(d)} />
+    <div class="card glass" data-slot="opsProposalsHtml" set:html={V.opsProposalsHtml(d)} />
+    <div class="card glass wide" data-slot="expiryCardHtml" set:html={V.expiryCardHtml(d)} />
+  </section>
+</InternalPage>

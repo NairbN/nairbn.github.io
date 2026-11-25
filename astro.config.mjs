@@ -17,6 +17,9 @@ const routes = {
   ],
   internal: [
     ['/', './src/targets/internal/index.astro'],
+    ['/services', './src/targets/internal/services.astro'],
+    ['/health', './src/targets/internal/health.astro'],
+    ['/ops', './src/targets/internal/ops.astro'],
     ['/data/internal.json', './src/targets/internal/data.ts'],
   ],
 };

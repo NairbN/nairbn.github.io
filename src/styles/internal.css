@@ -36,7 +36,7 @@
 .svc-ico { transition: transform 0.12s ease-out; }
 .app .svc-r { overflow-wrap: anywhere; }
 
-.vit-grid { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; }
+.vit-grid { display: grid; gap: 20px; align-items: start; grid-template-columns: 1fr 1fr; }
 .vit-row { display: flex; align-items: center; gap: 24px; }
 .vit-lg { flex: 1; display: grid; gap: 10px; font-size: 14px; font-weight: 500; }
 .ks-row { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
@@ -105,3 +105,25 @@
 }
 
 @media (max-width: 899.98px) { .page { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 108px); } }
+
+/* Services view switch */
+.vsw { display: inline-flex; padding: 3px; border-radius: 12px; background: var(--seg); margin-top: 24px; }
+.vsw button { all: unset; cursor: pointer; padding: 7px 18px; border-radius: 9px; font-size: 13px; font-weight: 500; color: var(--text2); min-height: 20px; }
+.vsw button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.vsw button[aria-pressed='true'] { font-weight: 600; color: var(--text); background: var(--seg-on); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); }
+.vsw + .isec { margin-top: 16px; }
+.isec[hidden] { display: none; }
+
+/* Overview: vitals first, so the section spacing starts tight; stat cell that links to Ops */
+a.stat { text-decoration: none; color: inherit; transition: background 0.15s; }
+a.stat:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; border-radius: 20px; }
+@media (hover: hover) { a.stat:hover { background: var(--seg-on); } }
+a.stat[data-s='warn'] .stat-v { color: var(--warn); }
+
+/* Ops page */
+.ops-grid2 { display: grid; gap: 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.ops-grid2 .wide { grid-column: 1 / -1; }
+.big-v { font-size: 34px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 14px; }
+.rt-l { margin-top: 2px; }
+.rt { margin-bottom: 14px; }
+@media (max-width: 899.98px) { .ops-grid2 { grid-template-columns: 1fr; } }

@@ -103,16 +103,41 @@ export function aiHtml(d: InternalData): string {
   return head + `<ul class="models">${m.map((x) => `<li><span>${esc(x.id)}</span><span class="badge" data-k="${x.loaded ? 'on' : 'off'}">${x.loaded ? 'Loaded' : 'Idle'}</span></li>`).join('')}</ul>`;
 }
 
-export function opsHtml(d: InternalData, now = Date.now()): string {
+const feedList = (items: any[] | undefined, f: (i: any) => string, empty: string) => items && items.length ? `<ul class="feed">${items.map(f).join('')}</ul>` : `<p class="muted">${empty}</p>`;
+
+export function opsAlertsHtml(d: InternalData, now = Date.now()): string {
   const o: any = d.ops ?? {};
-  const list = (items: any[] | undefined, f: (i: any) => string, empty: string) => items && items.length ? `<ul class="feed">${items.map(f).join('')}</ul>` : `<p class="muted">${empty}</p>`;
+  const n = num(o.alerts_firing ?? (o.alerts ?? []).length);
+  return `<h2 class="card-h">Alerts firing <span class="count">${n}</span></h2>${feedList(o.alerts, (a) => `<li><span class="dot" data-s="${a.severity === 'critical' ? 'bad' : 'warn'}" aria-hidden="true"></span><span><b>${esc(a.name)}</b> <small>${esc(a.severity)}, since ${agoShort(a.since, now)}</small></span></li>`, 'None firing')}`;
+}
+export function opsBackupHtml(d: InternalData, now = Date.now()): string {
+  const o: any = d.ops ?? {};
   const t = o.last_restore_test;
-  const alerts = list(o.alerts, (a) => `<li><span class="dot" data-s="${a.severity === 'critical' ? 'bad' : 'warn'}" aria-hidden="true"></span><span><b>${esc(a.name)}</b> <small>${esc(a.severity)}, since ${agoShort(a.since, now)}</small></span></li>`, 'None firing');
-  return `<section><h4>Alerts firing <span class="count">${num(o.alerts_firing ?? (o.alerts ?? []).length)}</span></h4>${alerts}</section>
-    <section><h4>Last restore test</h4>${t ? `<p class="rt"><span class="dot" data-s="${t.ok ? 'up' : 'bad'}" aria-hidden="true"></span><b>${t.ok ? 'Passed' : 'Failed'}</b>, ${esc(t.guest)}, ${agoShort(t.at, now)}</p>` : `<p class="muted">${DASH}</p>`}
-      <p class="muted small">Last backup ${isNum(o.last_backup_age_h) ? num(o.last_backup_age_h) + ' h ago' : DASH}. ${num(o.changes_this_month)} changes this month, ${num(o.decisions_total)} decisions.</p></section>
-    <section><h4>Recent changes</h4>${list(o.recent_changes, (c) => `<li><time>${esc(c.date)}</time><span>${esc(c.title)}</span></li>`, DASH)}</section>
-    <section><h4>Open proposals</h4>${list(o.open_proposals, (c) => `<li><time>${esc(c.date)}</time><span>${esc(c.title)}</span></li>`, 'None open')}</section>`;
+  return `<h2 class="card-h">Backups</h2>
+    <p class="rt-l muted small">Last backup</p><p class="big-v">${isNum(o.last_backup_age_h) ? num(o.last_backup_age_h) + ' h ago' : DASH}</p>
+    <p class="rt-l muted small">Last restore test</p>${t ? `<p class="rt"><span class="dot" data-s="${t.ok ? 'up' : 'bad'}" aria-hidden="true"></span><span><b>${t.ok ? 'Passed' : 'Failed'}</b>, ${esc(t.guest)}, ${agoShort(t.at, now)}</span></p>` : `<p class="muted">${DASH}</p>`}
+    <p class="muted small">${num(o.changes_this_month)} changes this month, ${num(o.decisions_total)} decisions recorded.</p>`;
+}
+export function opsChangesHtml(d: InternalData): string {
+  return `<h2 class="card-h">Recent changes</h2>${feedList((d.ops as any)?.recent_changes, (c) => `<li><time>${esc(c.date)}</time><span>${esc(c.title)}</span></li>`, DASH)}`;
+}
+export function opsProposalsHtml(d: InternalData): string {
+  return `<h2 class="card-h">Open proposals</h2>${feedList((d.ops as any)?.open_proposals, (c) => `<li><time>${esc(c.date)}</time><span>${esc(c.title)}</span></li>`, 'None open')}`;
+}
+export function expiryCardHtml(d: InternalData, now = Date.now()): string {
+  return `<h2 class="card-h">Expiry watch</h2>${expiryHtml(d, now)}`;
+}
+
+/** The four numbers on the Overview. The alerts cell links to the Ops page. */
+export function statsHtml(d: InternalData): string {
+  const l: any = d.lab ?? {}, o: any = d.ops ?? {};
+  const up = d.uptime_30d?.overall;
+  const alerts = o.alerts_firing ?? (o.alerts ?? []).length;
+  const cell = (v: string, label: string, sub: string, tag = 'div', extra = '') => `<${tag} class="stat"${extra}><span class="stat-v">${esc(v)}</span><span class="stat-l">${esc(label)}</span><span class="stat-s">${esc(sub)}</span></${tag}>`;
+  return cell(isNum(l.guests_running) ? String(l.guests_running) : DASH, 'services running', isNum(l.guests_total) ? `of ${l.guests_total}` : '')
+    + cell(isNum(l.services_up) ? String(l.services_up) : DASH, 'checks passing', isNum(l.services_total) ? `of ${l.services_total}` : '')
+    + cell(isNum(up) ? `${up.toFixed(1)}%` : DASH, '30-day uptime', 'across all checks')
+    + cell(isNum(alerts) ? String(alerts) : DASH, 'alerts firing', 'open the ops page', 'a', ` href="/ops/" data-s="${isNum(alerts) && alerts > 0 ? 'warn' : 'ok'}"`);
 }
 
 export function expiryHtml(d: InternalData, now = Date.now()): string {
@@ -139,5 +164,5 @@ export function panelHtml(g: Guest, now = Date.now()): string {
     ${g.note ? `<a class="btn-ghost" href="obsidian://open?vault=vault&amp;file=${encodeURIComponent(g.note)}">Open note in Obsidian</a>` : ''}`;
 }
 
-export const IRENDER = { linksHtml, appsHtml, vitalsHtml, checksHtml, aiHtml, opsHtml, expiryHtml } as const;
+export const IRENDER = { statsHtml, linksHtml, appsHtml, vitalsHtml, checksHtml, aiHtml, opsAlertsHtml, opsBackupHtml, opsChangesHtml, opsProposalsHtml, expiryCardHtml } as const;
 export { clampPct };

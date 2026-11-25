@@ -1,0 +1,17 @@
+---
+import InternalPage from '../../layouts/InternalPage.astro';
+import { loadInternal } from '../../lib/load-data';
+import type { InternalData } from '../../lib/types';
+import * as V from '../../lib/internal-views';
+const d = loadInternal() as unknown as InternalData;
+const sort = { k: 'id' as const, dir: 1 as const };
+---
+<InternalPage page="services" title="Services" heading="Services" lede="Every container and VM on the host. Select one for its address, load and backups.">
+  <div class="vsw" role="group" aria-label="View">
+    <button type="button" data-view="grid" aria-pressed="true">Grid</button>
+    <button type="button" data-view="list" aria-pressed="false">List</button>
+  </div>
+  <section class="isec" id="view-grid" aria-label="Services grid"><ul class="svc-card glass" data-slot="appsHtml" set:html={V.appsHtml(d)} /></section>
+  <section class="isec" id="view-list" aria-label="Services list" hidden><div class="card glass flush" id="guests-slot" set:html={V.guestTableHtml(d.guests, sort)} /></section>
+  <dialog slot="after" class="sheet" id="panel" aria-labelledby="panel-t"><div class="sheet-in"><button type="button" class="icon-btn sheet-close" data-close aria-label="Close details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button><div id="panel-body"></div></div></dialog>
+</InternalPage>

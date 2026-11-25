@@ -1,18 +1,20 @@
 ---
 import { THEME_MOON, THEME_SUN, TAB_ICONS } from '../lib/icons';
+interface Props { page: string }
+const { page } = Astro.props;
 const items = [
-  { href: '#launch', label: 'Launcher', icon: TAB_ICONS.home },
-  { href: '#apps', label: 'Services', icon: TAB_ICONS.services },
-  { href: '#vitals', label: 'Vitals', icon: TAB_ICONS.vitals },
-  { href: '#ops', label: 'Ops', icon: TAB_ICONS.hardware },
+  { key: 'home', href: '/', label: 'Overview', icon: TAB_ICONS.home },
+  { key: 'services', href: '/services/', label: 'Services', icon: TAB_ICONS.services },
+  { key: 'health', href: '/health/', label: 'Health', icon: TAB_ICONS.vitals },
+  { key: 'ops', href: '/ops/', label: 'Ops', icon: TAB_ICONS.hardware },
 ];
+const cur = (k: string) => (k === page ? 'page' : undefined);
 ---
 <header>
   <div class="nav glass">
-    <a class="brand" href="#top" aria-label="Heisenberg Lab internal portal, top">Heisenberg Lab</a>
+    <a class="brand" href="/" aria-label="Heisenberg Lab internal portal, overview">Heisenberg Lab</a>
     <nav class="seg" aria-label="Sections">
-      {items.map((i) => <a href={i.href}>{i.label}</a>)}
-      <a href="#guests">Guests</a>
+      {items.map((i) => <a href={i.href} aria-current={cur(i.key)}>{i.label}</a>)}
     </nav>
     <div class="nav-actions">
       <p class="pill glass" id="fresh" role="status"><span class="dot" id="fresh-dot" data-s="stale"></span><span id="fresh-text">Updated —</span></p>
@@ -23,7 +25,7 @@ const items = [
     </div>
   </div>
   <div class="bar glass">
-    <a class="brand" href="#top">Heisenberg Lab</a>
+    <a class="brand" href="/">Heisenberg Lab</a>
     <div class="bar-actions">
       <span class="fresh-m" id="fresh-m" aria-hidden="true"></span>
       <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch theme">
@@ -33,6 +35,6 @@ const items = [
     </div>
   </div>
   <nav class="tabbar glass" aria-label="Sections">
-    {items.map((i) => <a href={i.href}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={i.icon} /></svg>{i.label}</a>)}
+    {items.map((i) => <a href={i.href} aria-current={cur(i.key)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={i.icon} /></svg>{i.label}</a>)}
   </nav>
 </header>

@@ -1,0 +1,13 @@
+---
+import InternalPage from '../../layouts/InternalPage.astro';
+import { loadInternal } from '../../lib/load-data';
+import type { InternalData } from '../../lib/types';
+import * as V from '../../lib/internal-views';
+const d = loadInternal() as unknown as InternalData;
+---
+<InternalPage page="health" title="Health" heading="Health" lede="Uptime checks and the local models behind them.">
+  <section class="isec two" aria-label="Checks and models">
+    <div class="card glass"><h2 class="card-h">Health checks</h2><p class="cols-head"><span>Status</span><span>Check</span><span>30 days</span><span>Latency</span></p><div data-slot="checksHtml" set:html={V.checksHtml(d)} /></div>
+    <div class="card glass"><h2 class="card-h">AI models</h2><div data-slot="aiHtml" set:html={V.aiHtml(d)} /></div>
+  </section>
+</InternalPage>
