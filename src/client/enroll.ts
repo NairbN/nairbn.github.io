@@ -1,9 +1,11 @@
-// /auth/enroll/?t=<token>: register a passkey, then show recovery codes once.
+// /auth/enroll/#t=<token>: register a passkey, then show recovery codes once.
+// The token rides in the URL fragment (never sent to a server) and then only in POST bodies.
 import { api, errText, Offline } from './api';
 import { createPasskey, deviceName, webauthnSupported } from './webauthn';
 import { $, h, toast } from './dom';
 
-const token = new URLSearchParams(location.search).get('t') ?? '';
+const token = new URLSearchParams(location.hash.slice(1)).get('t') ?? '';
+if (location.hash) history.replaceState(null, '', location.pathname); // drop it from the address bar and history
 const show = (id: 'en-start' | 'en-invalid' | 'en-codes') => { for (const k of ['en-start', 'en-invalid', 'en-codes', 'en-loading']) $('#' + k)!.hidden = k !== id; };
 const msg = $('#en-msg')!;
 const say = (t: string) => { msg.textContent = t; msg.hidden = !t; };
@@ -12,7 +14,7 @@ name.value = `${deviceName()} passkey`;
 
 (async () => {
   try {
-    const r = await api('/auth/enroll/status' + (token ? `?t=${encodeURIComponent(token)}` : ''));
+    const r = token ? await api('/auth/enroll/status', { body: { token } }) : await api('/auth/enroll/status');
     if (r.ok && r.data?.valid) show('en-start'); else show('en-invalid');
   } catch (e) { show('en-invalid'); $('#en-invalid .auth-p')!.textContent = e instanceof Offline ? 'The control service is offline. Try again in a minute.' : 'This link is not valid.'; }
 })();
