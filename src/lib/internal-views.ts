@@ -85,7 +85,7 @@ export function guestTableHtml(guests: Guest[], sort: { k: SortKey; dir: 1 | -1 
     <td class="r">${isNum(g.cpu_pct) ? pct(g.cpu_pct, 1) : DASH}</td>
     <td class="r">${isNum(g.mem_used_mb) ? `${mb(g.mem_used_mb)}${isNum(g.mem_total_mb) ? ` / ${mb(g.mem_total_mb)}` : ''}` : DASH}</td>
     <td class="r">${durationS(g.uptime_s)}</td><td class="r">${backupCell(g.last_backup_at, now)}</td><td>${esc(g.last_snapshot ?? DASH)}</td></tr>`; }).join('');
-  return `<div class="table-scroll" tabindex="0" role="region" aria-label="Guest table, scrolls sideways on small screens"><table class="tbl"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+  return `<div class="table-scroll" tabindex="0" role="region" aria-label="Service table, scrolls sideways on small screens"><table class="tbl"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 
 export function checksHtml(d: InternalData): string {
