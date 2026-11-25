@@ -2,7 +2,7 @@
 // (live refresh), so what you see before and after the live fetch is built the same way. Every dynamic value goes
 // through esc(), and enums (status, category) are checked against fixed lists.
 import { esc, isNum, DASH, clampPct, ageMinutes } from './fmt';
-import { SERVICE_ICONS, SECRET_ICON, FALLBACK_ICON, SECRET_FILL, SPEC_ICONS } from './icons';
+import { SERVICE_ICONS, CLASSIFIED_ICON, FALLBACK_ICON, CLASSIFIED_FILL, SPEC_ICONS } from './icons';
 import { safeStatus, STATUS_LABEL, type PublicData } from './types';
 
 const R = { 1: 70, 2: 54, 3: 38 } as const;
@@ -74,9 +74,9 @@ export function servicesGrid(d: PublicData): string {
   return (d.guests ?? []).map((g) => {
     const st = safeStatus(g.status);
     const key = String(g.name ?? '').toLowerCase();
-    const secret = g.secret === true || st === 'classified';
-    const ic = secret ? SECRET_ICON : SERVICE_ICONS[key] ?? FALLBACK_ICON;
-    const fill = secret ? SECRET_FILL : `linear-gradient(160deg,${ic.c1} 0%,${ic.c2} 100%)`;
+    const classified = g.secret === true || st === 'classified';
+    const ic = classified ? CLASSIFIED_ICON : SERVICE_ICONS[key] ?? FALLBACK_ICON;
+    const fill = classified ? CLASSIFIED_FILL : `linear-gradient(160deg,${ic.c1} 0%,${ic.c2} 100%)`;
     const word = STATUS_LABEL[st] ?? 'Unknown';
     return `<li class="svc"><div class="svc-ico" style="background:${fill}"><i class="gloss" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${ic.d}"/></svg><span class="svc-dot dot" data-s="${st}" title="${esc(word)}"></span></div>
 <div class="svc-t"><span class="svc-n">${esc(g.name)}</span><span class="svc-r">${esc(g.role)}</span><span class="sr-only">Status: ${esc(word)}</span></div></li>`;

@@ -17,9 +17,9 @@ export const SERVICE_ICONS: Record<string, SvcIcon> = {
   saul: { c1: '#fb7185', c2: '#9f1239', d: 'M4 5h16l-6 7.5V18l-4 2v-7.5z' },
   homeassistant: { c1: '#60a5fa', c2: '#1e40af', d: 'M4 11.5 12 4.5l8 7 M6.5 10v9.5h11V10 M10 19.5V15h4v4.5' },
 };
-export const SECRET_ICON: SvcIcon = { c1: '#71717a', c2: '#18181b', d: 'M6 11h12v9H6z M8.5 11V8a3.5 3.5 0 0 1 7 0v3 M12 14.5v2' };
+export const CLASSIFIED_ICON: SvcIcon = { c1: '#71717a', c2: '#18181b', d: 'M6 11h12v9H6z M8.5 11V8a3.5 3.5 0 0 1 7 0v3 M12 14.5v2' };
 export const FALLBACK_ICON: SvcIcon = { c1: '#a1a1aa', c2: '#3f3f46', d: 'M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h6v6h-6z' };
-export const SECRET_FILL = 'repeating-linear-gradient(135deg,#3f3f46 0 7px,#27272a 7px 14px)';
+export const CLASSIFIED_FILL = 'repeating-linear-gradient(135deg,#3f3f46 0 7px,#27272a 7px 14px)';
 
 export const THEME_MOON = 'M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z';
 export const THEME_SUN = 'M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8 M12 2v2 M12 20v2 M4.9 4.9l1.4 1.4 M17.7 17.7l1.4 1.4 M2 12h2 M20 12h2 M4.9 19.1l1.4-1.4 M17.7 6.3l1.4-1.4';

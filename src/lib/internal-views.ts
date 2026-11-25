@@ -1,7 +1,7 @@
 // HTML renderers for the internal portal (same escaping rules as the public views). Nothing here fetches anything.
 import { esc, safeUrl, isNum, num, pct, gb, mb, durationS, agoShort, hoursAgo, daysLeft, clampPct, DASH } from './fmt';
 import { ringsSvg } from './views';
-import { SERVICE_ICONS, SECRET_ICON, FALLBACK_ICON, SECRET_FILL } from './icons';
+import { SERVICE_ICONS, CLASSIFIED_ICON, FALLBACK_ICON, CLASSIFIED_FILL } from './icons';
 import { CATEGORIES, STATUS_LABEL, safeStatus, type Guest, type InternalData, type PublicData } from './types';
 
 const bar = (label: string, text: string, value: number | null | undefined, max = 100, warnAt?: number, badAt?: number) => {
@@ -23,9 +23,9 @@ export function linksHtml(d: InternalData): string {
 export function appsHtml(d: InternalData): string {
   return (d.guests ?? []).map((g) => {
     const st = safeStatus(g.status);
-    const secret = g.secret === true || st === 'classified';
-    const ic = secret ? SECRET_ICON : SERVICE_ICONS[String(g.name).toLowerCase()] ?? FALLBACK_ICON;
-    const fill = secret ? SECRET_FILL : `linear-gradient(160deg,${ic.c1} 0%,${ic.c2} 100%)`;
+    const classified = g.secret === true || st === 'classified';
+    const ic = classified ? CLASSIFIED_ICON : SERVICE_ICONS[String(g.name).toLowerCase()] ?? FALLBACK_ICON;
+    const fill = classified ? CLASSIFIED_FILL : `linear-gradient(160deg,${ic.c1} 0%,${ic.c2} 100%)`;
     return `<li><button type="button" class="app svc" data-id="${esc(g.id)}" aria-haspopup="dialog"><span class="svc-ico" style="background:${fill}"><i class="gloss" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${ic.d}"/></svg><span class="svc-dot dot" data-s="${st}"></span></span>
 <span class="svc-t"><span class="svc-n">${esc(g.name)}</span><span class="svc-r">${esc(g.ip ?? g.role)}</span><span class="sr-only">${esc(g.role)}. Status: ${esc(STATUS_LABEL[st])}</span></span></button></li>`;
   }).join('');
