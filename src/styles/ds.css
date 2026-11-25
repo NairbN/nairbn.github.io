@@ -158,7 +158,7 @@ html { -webkit-text-size-adjust: 100%; background: var(--base); scroll-padding-t
 body {
   margin: 0; min-height: 100vh; min-height: 100svh;
   font-family: var(--font); font-size: 16px; line-height: 1.45; font-optical-sizing: auto;
-  font-variant-numeric: tabular-nums; color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: clip;
+  color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: clip;
 }
 h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
@@ -325,7 +325,7 @@ html[data-theme='light'] .theme-btn .i-moon { display: block; }
 .home { overflow-x: clip; }
 .wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gx); }
 @media (max-width: 899.98px) {
-  .page { padding: calc(env(safe-area-inset-top, 0px) + 82px) 0 150px; }
+  .page { padding: calc(env(safe-area-inset-top, 0px) + 82px) 0 32px; }
   .wrap { padding-inline: 16px; }
   .pad-t { padding-inline: 8px; }
 }
@@ -371,7 +371,7 @@ html[data-theme='light'] .theme-btn .i-moon { display: block; }
 .credits h2 { font-size: 13px; font-weight: 600; color: var(--text); }
 .credits ul { display: grid; gap: 8px; margin-top: 8px; }
 .credits a { text-underline-offset: 2px; }
-@media (max-width: 899.98px) { .foot { padding-bottom: 8px; } .foot-card { padding: 20px; border-radius: 22px; } }
+@media (max-width: 899.98px) { .foot { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 108px); } .foot-card { padding: 20px; border-radius: 22px; } }
 
 /* accessibility fallbacks */
 @media (prefers-reduced-motion: reduce) {
@@ -385,3 +385,6 @@ html[data-theme='light'] .theme-btn .i-moon { display: block; }
 @media (prefers-contrast: more) {
   .glass { background: color-mix(in srgb, var(--base) 90%, transparent); border-color: var(--text2); }
 }
+
+/* Tabular figures only where digits line up; on body text Inter's tabular hyphen renders as a spaced dash. */
+.stat-v, .vb-v, .up-v, .op-v, .lv-v, .ks b, .tbl td.r, .row-v, .mt-h b, .vit-lg b, .lg b, .pill, .fresh-m, time { font-variant-numeric: tabular-nums; }

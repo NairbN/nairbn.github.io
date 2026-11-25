@@ -5,11 +5,8 @@ import { loadPublic } from '../../lib/load-data';
 import type { PublicData } from '../../lib/types';
 import * as V from '../../lib/views';
 const d = loadPublic() as unknown as PublicData;
-const memGb = typeof d.host?.mem_total_gb === 'number' ? d.host.mem_total_gb : 64;
-const vramGb = typeof d.gpu?.vram_total_gb === 'number' ? d.gpu.vram_total_gb : 32;
-const nSvc = typeof d.lab?.guests_total === 'number' ? d.lab.guests_total : 13;
 const fleet = [
-  { k: 'on', badge: 'Always on', name: 'heisenberg', kind: 'Tower server, main Proxmox host', detail: `10-core Intel, ${memGb} GB, ${vramGb} GB Radeon AI PRO. Runs all ${nSvc} services and the local models.`, short: `Runs all ${nSvc} services and the local models.`, kindShort: 'Tower server, main Proxmox host' },
+  { k: 'on', badge: 'Always on', name: 'heisenberg', kind: 'Tower server, main Proxmox host', detail: '10-core Intel, 64 GB, 32 GB Radeon AI PRO. Runs all 13 services and the local models.', short: 'Runs all 13 services and the local models.', kindShort: 'Tower server, main Proxmox host' },
   { k: 'build', badge: 'Being built out', name: 'jesse', kind: 'MacBook Pro, second Proxmox node', detail: 'Quad-core i7, 16 GB. Becoming the always-on backup box that can restore the lab if heisenberg dies.', short: 'Becoming the backup box that can restore the lab.', kindShort: 'MacBook Pro, second node' },
   { k: 'off', badge: 'Retired', name: 'saul', kind: 'MacBook Air', detail: 'Planned as a safety-net box for DNS and remote access; dropped in favor of jesse.', short: 'Planned safety-net box, dropped in favor of jesse.', kindShort: 'MacBook Air' },
 ];

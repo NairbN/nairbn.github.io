@@ -149,7 +149,7 @@ export function hardwareSpecs(d: PublicData): string {
   const h = d.host ?? {}, g = d.gpu ?? {};
   const cpuName = String(h.cpu ?? 'Intel Core i9-7900X (10C/20T)').replace(/\s*\(.*\)\s*$/, '');
   const n = isNum(d.lab?.guests_total) ? d.lab.guests_total : null;
-  const mem = isNum(h.mem_total_gb) ? `${h.mem_total_gb} GB DDR4` : '64 GB DDR4';
+  const mem = '64 GB DDR4'; // fixed hardware fact, not derived from data
   const gpuGb = isNum(g.vram_total_gb) ? g.vram_total_gb : 32;
   const specs: [keyof typeof SPEC_ICONS, string, string, string, string][] = [
     ['cpu', 'Processor', cpuName, `${cores(d) || '10 cores, 20 threads'}. Shared by ${n ?? 'all'} containers and VMs.`, `${cores(d) || '10 cores, 20 threads'}, shared by every service.`],
@@ -159,7 +159,7 @@ export function hardwareSpecs(d: PublicData): string {
     ['net', 'Network', 'Gigabit Ethernet', 'One bridge for all services, default-deny firewall, remote access through a VPN router.', 'Default-deny firewall, remote access over a VPN.'],
     ['os', 'Platform', 'Proxmox VE 9', 'Debian-based hypervisor: 12 LXC containers and 2 VMs, snapshotted before every risky change.', '12 containers and 2 VMs, snapshotted before risky changes.'],
   ];
-  return specs.map(([k, label, value, detail, short]) => `<li class="spec"><span class="spec-ico" style="background:${SPEC_ICONS[k].tint}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${SPEC_ICONS[k].d}"/></svg></span>
+  return specs.map(([k, label, value, detail, short]) => `<li class="spec glass"><span class="spec-ico" style="background:${SPEC_ICONS[k].tint}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${SPEC_ICONS[k].d}"/></svg></span>
 <div class="spec-b"><span class="spec-l">${esc(label)}</span><span class="spec-v">${esc(value)}</span><span class="spec-d"><span class="hide-phone">${esc(detail)}</span><span class="show-phone">${esc(short)}</span></span></div></li>`).join('');
 }
 
