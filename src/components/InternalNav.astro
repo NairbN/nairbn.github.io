@@ -2,11 +2,13 @@
 import { THEME_MOON, THEME_SUN, TAB_ICONS } from '../lib/icons';
 interface Props { page: string }
 const { page } = Astro.props;
+const SETTINGS_ICON = 'M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6 M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z';
 const items = [
-  { key: 'home', href: '/', label: 'Overview', icon: TAB_ICONS.home },
-  { key: 'services', href: '/services/', label: 'Services', icon: TAB_ICONS.services },
-  { key: 'health', href: '/health/', label: 'Health', icon: TAB_ICONS.vitals },
-  { key: 'ops', href: '/ops/', label: 'Ops', icon: TAB_ICONS.hardware },
+  { key: 'home', href: '/', label: 'Overview', icon: TAB_ICONS.home, auth: false },
+  { key: 'services', href: '/services/', label: 'Services', icon: TAB_ICONS.services, auth: false },
+  { key: 'health', href: '/health/', label: 'Health', icon: TAB_ICONS.vitals, auth: false },
+  { key: 'ops', href: '/ops/', label: 'Ops', icon: TAB_ICONS.hardware, auth: false },
+  { key: 'settings', href: '/settings/', label: 'Settings', icon: SETTINGS_ICON, auth: true },
 ];
 const cur = (k: string) => (k === page ? 'page' : undefined);
 ---
@@ -14,10 +16,19 @@ const cur = (k: string) => (k === page ? 'page' : undefined);
   <div class="nav glass">
     <a class="brand" href="/" aria-label="Heisenberg Lab internal portal, overview">Heisenberg Lab</a>
     <nav class="seg" aria-label="Sections">
-      {items.map((i) => <a href={i.href} aria-current={cur(i.key)}>{i.label}</a>)}
+      {items.map((i) => <a href={i.href} aria-current={cur(i.key)} data-auth-in={i.auth ? '' : undefined}>{i.label}</a>)}
     </nav>
     <div class="nav-actions">
       <p class="pill glass" id="fresh" role="status"><span class="dot" id="fresh-dot" data-s="stale"></span><span id="fresh-text">Updated —</span></p>
+      <a class="btn-solid" href="/login/" data-auth-out>Sign in</a>
+      <div class="acct" data-auth-in>
+        <button class="icon-btn acct-btn" type="button" id="acct-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="acct-menu" aria-label="Account menu"><span id="acct-initial" aria-hidden="true">B</span></button>
+        <div class="acct-menu glass" id="acct-menu" role="menu" hidden>
+          <p class="acct-who"><b id="acct-user">brian</b><span id="acct-device" class="muted small"></span></p>
+          <a role="menuitem" href="/settings/">Settings</a>
+          <button role="menuitem" type="button" id="signout-btn">Sign out</button>
+        </div>
+      </div>
       <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch theme">
         <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_SUN} /></svg>
         <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_MOON} /></svg>
@@ -28,6 +39,7 @@ const cur = (k: string) => (k === page ? 'page' : undefined);
     <a class="brand" href="/">Heisenberg Lab</a>
     <div class="bar-actions">
       <span class="fresh-m" id="fresh-m" aria-hidden="true"></span>
+      <a class="btn-solid btn-sm" href="/login/" data-auth-out>Sign in</a>
       <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch theme">
         <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_SUN} /></svg>
         <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_MOON} /></svg>
@@ -35,6 +47,6 @@ const cur = (k: string) => (k === page ? 'page' : undefined);
     </div>
   </div>
   <nav class="tabbar glass" aria-label="Sections">
-    {items.map((i) => <a href={i.href} aria-current={cur(i.key)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={i.icon} /></svg>{i.label}</a>)}
+    {items.map((i) => <a href={i.href} aria-current={cur(i.key)} data-auth-in={i.auth ? '' : undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={i.icon} /></svg>{i.label}</a>)}
   </nav>
 </header>

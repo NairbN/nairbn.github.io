@@ -1,23 +1,44 @@
 ---
 import Base from './Base.astro';
 import InternalNav from '../components/InternalNav.astro';
+import PortalChrome from '../components/PortalChrome.astro';
 import '../styles/public.css';
 import '../styles/internal.css';
-interface Props { page: string; title: string; heading: string; lede: string }
-const { page, title, heading, lede } = Astro.props;
+import '../styles/portal.css';
+interface Props { page: string; title: string; heading: string; lede: string; sub?: string }
+const { page, title, heading, lede, sub } = Astro.props;
+const SUBS = [
+  { key: 'appearance', href: '/settings/appearance/', label: 'Appearance' },
+  { key: 'home', href: '/settings/home/', label: 'Home' },
+  { key: 'notifications', href: '/settings/notifications/', label: 'Alerts' },
+  { key: 'security', href: '/settings/security/', label: 'Security' },
+];
 ---
 <Base page={page} title={`${title} | Heisenberg Lab (internal)`} description="Internal portal" robots="noindex, nofollow">
   <InternalNav page={page} />
   <main id="main" class="page">
     <div class="wrap">
+      <div class="ro-banner glass" id="ro-banner" role="status" hidden>
+        <span class="dot" data-s="warn" aria-hidden="true"></span>
+        <p id="ro-text">Read-only — control service offline</p>
+        <button type="button" class="btn-ghost btn-sm" id="ro-retry">Retry</button>
+      </div>
       <div class="page-head pad-t">
         <div class="intro"><h1 class="h1">{heading}</h1><p class="lede">{lede}</p></div>
       </div>
+      {sub !== undefined && (
+        <nav class="subnav seg" aria-label="Settings sections">
+          {SUBS.map((s) => <a href={s.href} aria-current={s.key === sub ? 'page' : undefined}>{s.label}</a>)}
+        </nav>
+      )}
       <slot />
     </div>
   </main>
   <slot name="after" />
+  <PortalChrome />
   <script>
     import '../client/internal';
+    import '../client/portal';
   </script>
+  <slot name="scripts" />
 </Base>

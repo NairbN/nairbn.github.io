@@ -1,14 +1,14 @@
 // HTML renderers for the internal portal (same escaping rules as the public views). Nothing here fetches anything.
 import { esc, safeUrl, isNum, num, pct, gb, mb, durationS, agoShort, hoursAgo, daysLeft, clampPct, DASH } from './fmt';
 import { ringsSvg } from './views';
-import { SERVICE_ICONS, CLASSIFIED_ICON, FALLBACK_ICON, CLASSIFIED_FILL } from './icons';
+import { SERVICE_ICONS, CLASSIFIED_ICON, FALLBACK_ICON } from './icons';
 import { CATEGORIES, STATUS_LABEL, safeStatus, type Guest, type InternalData, type PublicData } from './types';
 
 const bar = (label: string, text: string, value: number | null | undefined, max = 100, warnAt?: number, badAt?: number) => {
   const has = isNum(value);
   const w = has ? Math.max(0, Math.min(100, ((value as number) / max) * 100)) : 0;
   const state = has && badAt !== undefined && (value as number) >= badAt ? 'bad' : has && warnAt !== undefined && (value as number) >= warnAt ? 'warn' : 'ok';
-  return `<div class="mt" data-state="${state}"><div class="mt-h"><span>${esc(label)}</span><b>${esc(text)}</b></div><div class="mt-bar" role="meter" aria-label="${esc(label)}" aria-valuemin="0" aria-valuemax="${max}" ${has ? `aria-valuenow="${value}"` : ''} aria-valuetext="${esc(text)}"><i style="width:${w.toFixed(1)}%"></i></div></div>`;
+  return `<div class="mt" data-state="${state}"><div class="mt-h"><span>${esc(label)}</span><b>${esc(text)}</b></div><div class="mt-bar" role="meter" aria-label="${esc(label)}" aria-valuemin="0" aria-valuemax="${max}" ${has ? `aria-valuenow="${value}"` : ''} aria-valuetext="${esc(text)}"><i class="w${Math.round(w)}"></i></div></div>`;
 };
 const kvStat = (label: string, value: string, sub = '') => `<div class="ks"><b>${esc(value)}</b><span>${esc(label)}</span>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
 const letter = (s: string) => esc((s || '?').trim().charAt(0).toUpperCase());
@@ -25,8 +25,9 @@ export function appsHtml(d: InternalData): string {
     const st = safeStatus(g.status);
     const classified = g.secret === true || st === 'classified';
     const ic = classified ? CLASSIFIED_ICON : SERVICE_ICONS[String(g.name).toLowerCase()] ?? FALLBACK_ICON;
-    const fill = classified ? CLASSIFIED_FILL : `linear-gradient(160deg,${ic.c1} 0%,${ic.c2} 100%)`;
-    return `<li><button type="button" class="app svc" data-id="${esc(g.id)}" aria-haspopup="dialog"><span class="svc-ico" style="background:${fill}"><i class="gloss" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${ic.d}"/></svg><span class="svc-dot dot" data-s="${st}"></span></span>
+    const key = String(g.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+    const icCls = classified ? 'ic-classified' : SERVICE_ICONS[String(g.name).toLowerCase()] ? `ic-${key}` : 'ic-fallback';
+    return `<li><button type="button" class="app svc" data-id="${esc(g.id)}" aria-haspopup="dialog"><span class="svc-ico ${icCls}"><i class="gloss" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${ic.d}"/></svg><span class="svc-dot dot" data-s="${st}"></span></span>
 <span class="svc-t"><span class="svc-n">${esc(g.name)}</span><span class="svc-r">${esc(g.ip ?? g.role)}</span><span class="sr-only">${esc(g.role)}. Status: ${esc(STATUS_LABEL[st])}</span></span></button></li>`;
   }).join('');
 }

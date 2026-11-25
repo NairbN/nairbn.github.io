@@ -1,12 +1,29 @@
 ---
 import InternalPage from '../../layouts/InternalPage.astro';
 import { loadInternal } from '../../lib/load-data';
+import { FLAGS } from '../../lib/flags';
 import type { InternalData } from '../../lib/types';
 import * as V from '../../lib/internal-views';
 const d = loadInternal() as unknown as InternalData;
 ---
 <InternalPage page="home" title="Overview" heading="Overview" lede="Host and GPU vitals first, then everything you launch from here.">
-  <section class="isec" aria-label="Vitals"><div class="vit-grid" data-slot="vitalsHtml" set:html={V.vitalsHtml(d)} /></section>
-  <section class="isec" aria-label="Lab summary"><div class="strip glass glass-strong" role="group" data-slot="statsHtml" set:html={V.statsHtml(d)} /></section>
-  <section class="isec" aria-labelledby="h-launch"><h2 class="sec-h" id="h-launch">Launcher</h2><div class="launcher" data-slot="linksHtml" set:html={V.linksHtml(d)} /></section>
+  <div class="cards" id="cards">
+    <section class="isec" data-card="vitals" aria-label="Vitals"><div class="vit-grid" data-slot="vitalsHtml" set:html={V.vitalsHtml(d)} /></section>
+    <section class="isec needs" data-card="needs" id="needs" aria-labelledby="needs-h" hidden>
+      <details class="needs-card glass glass-strong" id="needs-details" open>
+        <summary>
+          <span class="needs-t"><b id="needs-h">Needs you</b><span class="needs-n" id="needs-n">0</span></span>
+          <span class="needs-hint muted" id="needs-hint"></span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <ul class="needs-list" id="needs-list"></ul>
+        <p class="needs-empty muted" id="needs-empty" hidden>Nothing needs you right now.</p>
+      </details>
+    </section>
+    <section class="isec" data-card="strip" aria-label="Lab summary"><div class="strip glass glass-strong" role="group" data-slot="statsHtml" set:html={V.statsHtml(d)} /></section>
+    <section class="isec" data-card="launcher" aria-labelledby="h-launch"><h2 class="sec-h" id="h-launch">Launcher</h2><div class="launcher" id="launcher" data-slot="linksHtml" set:html={V.linksHtml(d)} /></section>
+    {FLAGS.quickActions && (
+      <section class="isec" data-card="quick" aria-labelledby="h-quick" hidden><h2 class="sec-h" id="h-quick">Quick actions</h2><div class="quick" id="quick"></div></section>
+    )}
+  </div>
 </InternalPage>

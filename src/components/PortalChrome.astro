@@ -1,0 +1,34 @@
+---
+// Shared portal furniture: toast, step-up sheet and the "Add to Home Screen" sheet. Filled in by client/portal.ts.
+---
+<div class="toast-host" id="toasts" role="status" aria-live="polite"></div>
+<dialog class="sheet bsheet" id="stepup" aria-labelledby="su-title">
+  <div class="bs-in">
+    <span class="grab" aria-hidden="true"></span>
+    <h2 class="bs-h" id="su-title">Needs Face ID</h2>
+    <p class="bs-p" id="su-summary"></p>
+    <p class="note" id="su-error" role="alert" hidden></p>
+    <div class="bs-actions">
+      <button type="button" class="btn-lg solid" id="su-go">Confirm with Face ID</button>
+      <button type="button" class="btn-lg quiet" id="su-cancel">Cancel</button>
+    </div>
+    <p class="bs-foot">iOS will say &ldquo;Sign in&rdquo; with this site&rsquo;s name. That is this portal asking for Face ID again before a protected change.</p>
+  </div>
+</dialog>
+<dialog class="sheet bsheet" id="install" aria-labelledby="in-title">
+  <div class="bs-in">
+    <span class="grab" aria-hidden="true"></span>
+    <h2 class="bs-h" id="in-title">Add Heisenberg Lab to your Home Screen</h2>
+    <p class="bs-p">iPhone only delivers alerts and approvals to apps on the Home Screen. It takes about ten seconds.</p>
+    <ol class="steps">
+      <li><span class="step-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 15V4 M8 8l4-4 4 4 M6 11H5v9h14v-9h-1" /></svg></span><span><b>Tap Share</b><small>The square with an arrow, in Safari&rsquo;s toolbar.</small></span></li>
+      <li><span class="step-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z M12 8v8 M8 12h8" /></svg></span><span><b>Choose Add to Home Screen</b><small>Scroll the share sheet if you do not see it.</small></span></li>
+      <li><span class="step-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z M11 18h2" /></svg></span><span><b>Open the Heisenberg Lab icon</b><small>Start from the Home Screen, not from Safari.</small></span></li>
+    </ol>
+    <div class="callout"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z M10 21h4" /></svg><span><b>Then allow notifications</b><small>Say yes when the app asks. You choose which alerts you get in Settings later.</small></span></div>
+    <div class="bs-actions">
+      <button type="button" class="btn-lg solid" id="in-ok">Got it</button>
+      <button type="button" class="btn-lg quiet" id="in-later">Remind me later</button>
+    </div>
+  </div>
+</dialog>

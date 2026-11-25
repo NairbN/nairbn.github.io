@@ -1,0 +1,14 @@
+---
+import InternalPage from '../../../layouts/InternalPage.astro';
+---
+<InternalPage page="settings" sub="security" title="Security" heading="Security" lede="Passkeys, devices and a record of what changed.">
+  <div class="gate card glass" id="gate" hidden>
+    <h2 class="card-h">Sign in to change settings</h2>
+    <p class="muted" id="gate-text">Settings are saved to the portal and need a signed-in device.</p>
+    <a class="btn-solid" href="/login/" id="gate-login">Sign in</a>
+  </div>
+  <div class="s-root" id="s-root" hidden></div>
+  <script>
+    import '../../../client/settings-security';
+  </script>
+</InternalPage>

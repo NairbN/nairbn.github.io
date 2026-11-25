@@ -1,0 +1,23 @@
+---
+// Bare layout for sign-in and enrollment: the photo, the wordmark and one glass card. No nav, no portal data.
+import Base from './Base.astro';
+import '../styles/public.css';
+import '../styles/internal.css';
+import '../styles/portal.css';
+interface Props { page: string; title: string; tagline: string }
+const { page, title, tagline } = Astro.props;
+---
+<Base page={page} title={`${title} | Heisenberg Lab (internal)`} description="Internal portal sign in" robots="noindex, nofollow">
+  <main id="main" class="auth">
+    <div class="auth-head">
+      <h1 class="auth-h1">Heisenberg<br />Lab</h1>
+      <p class="auth-tag">{tagline}</p>
+    </div>
+    <div class="auth-body">
+      <div class="auth-card glass glass-strong"><slot /></div>
+      <p class="auth-foot">LAN and Tailscale only</p>
+    </div>
+  </main>
+  <div class="toast-host" id="toasts" role="status" aria-live="polite"></div>
+  <slot name="scripts" />
+</Base>

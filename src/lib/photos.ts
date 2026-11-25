@@ -41,3 +41,11 @@ export const PERIODS: Period[] = ['morning', 'midday', 'night'];
 
 /** Plain-JS clock rule shared by the inline head script (kept in sync by hand): 05-11 morning, 11-18 midday, else night. */
 export const periodAt = (hour: number): Period => (hour >= 5 && hour < 11 ? 'morning' : hour >= 11 && hour < 18 ? 'midday' : 'night');
+
+/** Built-in backdrops, addressed as `builtin:<id>` in portal settings. Files live in /backdrops (bundled with the internal build). */
+export interface Builtin { id: string; label: string; place: string; period: Period; file: string }
+export const BUILTINS: Builtin[] = [
+  { id: 'chicago-lakefront', label: 'Lakefront', place: 'Chicago', period: 'morning', file: '/backdrops/morning' },
+  { id: 'chicago-river', label: 'River', place: 'Chicago', period: 'midday', file: '/backdrops/midday' },
+  { id: 'tokyo-minato', label: 'Minato', place: 'Tokyo', period: 'night', file: '/backdrops/night' },
+];

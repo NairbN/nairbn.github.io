@@ -1,0 +1,29 @@
+---
+import AuthPage from '../../layouts/AuthPage.astro';
+---
+<AuthPage page="enroll" title="Add a passkey" tagline="Set up Face ID for this device.">
+  <div id="en-start" hidden>
+    <h2 class="auth-h2">Register a passkey</h2>
+    <p class="auth-p" id="en-sub">This device will use Face ID or its screen lock to sign in. The passkey is stored by your device, not by the portal.</p>
+    <p class="note" id="en-msg" role="alert" hidden></p>
+    <label for="en-name">Name this passkey</label>
+    <input class="field" id="en-name" name="name" autocomplete="off" maxlength="40" value="" />
+    <button type="button" class="btn-lg solid" id="en-go">Register passkey</button>
+  </div>
+  <div id="en-invalid" hidden>
+    <h2 class="auth-h2">This link has expired</h2>
+    <p class="auth-p">Enrollment links work once and last ten minutes. Ask for a new one and open it on this device.</p>
+    <a class="btn-lg quiet" href="/login/">Back to sign in</a>
+  </div>
+  <div id="en-codes" hidden>
+    <h2 class="auth-h2">Save your recovery codes</h2>
+    <p class="auth-p">Each code signs you in once if you lose your passkey. They are shown only now. Keep them somewhere offline.</p>
+    <ul class="codes" id="en-code-list"></ul>
+    <label class="check"><input type="checkbox" id="en-saved" /><span>I saved them</span></label>
+    <button type="button" class="btn-lg solid" id="en-done" disabled>Continue</button>
+  </div>
+  <div id="en-loading" class="auth-p muted">Checking this link…</div>
+  <script>
+    import '../../client/enroll';
+  </script>
+</AuthPage>

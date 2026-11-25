@@ -20,6 +20,16 @@ const routes = {
     ['/services', './src/targets/internal/services.astro'],
     ['/health', './src/targets/internal/health.astro'],
     ['/ops', './src/targets/internal/ops.astro'],
+    ['/login', './src/targets/internal/login.astro'],
+    ['/auth/enroll', './src/targets/internal/enroll.astro'],
+    ['/settings', './src/targets/internal/settings/index.astro'],
+    ['/settings/appearance', './src/targets/internal/settings/appearance.astro'],
+    ['/settings/home', './src/targets/internal/settings/home.astro'],
+    ['/settings/notifications', './src/targets/internal/settings/notifications.astro'],
+    ['/settings/security', './src/targets/internal/settings/security.astro'],
+    ['/boot.js', './src/targets/internal/boot-js.ts'],
+    ['/boot-init.js', './src/targets/internal/boot-init-js.ts'],
+    ['/svc-icons.css', './src/targets/internal/svc-icons-css.ts'],
     ['/data/internal.json', './src/targets/internal/data.ts'],
   ],
 };
@@ -45,6 +55,7 @@ export default defineConfig({
   site: target === 'public' ? 'https://nairbn.github.io' : undefined,
   integrations: [targetRoutes],
   devToolbar: { enabled: false },
-  build: { assets: '_assets', inlineStylesheets: 'auto' },
-  vite: { define: { __TARGET__: JSON.stringify(target) } },
+  // The internal portal runs under a strict CSP (style-src 'self', script-src 'self'): never inline styles or scripts there.
+  build: { assets: '_assets', inlineStylesheets: target === 'internal' ? 'never' : 'auto' },
+  vite: { define: { __TARGET__: JSON.stringify(target) }, ...(target === 'internal' ? { build: { assetsInlineLimit: 0 } } : {}) },
 });
