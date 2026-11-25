@@ -1,0 +1,38 @@
+---
+import { THEME_MOON, THEME_SUN, TAB_ICONS } from '../lib/icons';
+const items = [
+  { href: '#launch', label: 'Launcher', icon: TAB_ICONS.home },
+  { href: '#apps', label: 'Services', icon: TAB_ICONS.services },
+  { href: '#vitals', label: 'Vitals', icon: TAB_ICONS.vitals },
+  { href: '#ops', label: 'Ops', icon: TAB_ICONS.hardware },
+];
+---
+<header>
+  <div class="nav glass">
+    <a class="brand" href="#top" aria-label="Heisenberg Lab internal portal, top">Heisenberg Lab</a>
+    <nav class="seg" aria-label="Sections">
+      {items.map((i) => <a href={i.href}>{i.label}</a>)}
+      <a href="#guests">Guests</a>
+    </nav>
+    <div class="nav-actions">
+      <p class="pill glass" id="fresh" role="status"><span class="dot" id="fresh-dot" data-s="stale"></span><span id="fresh-text">Updated —</span></p>
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch theme">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_SUN} /></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_MOON} /></svg>
+      </button>
+    </div>
+  </div>
+  <div class="bar glass">
+    <a class="brand" href="#top">Heisenberg Lab</a>
+    <div class="bar-actions">
+      <span class="fresh-m" id="fresh-m" aria-hidden="true"></span>
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch theme">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_SUN} /></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_MOON} /></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="tabbar glass" aria-label="Sections">
+    {items.map((i) => <a href={i.href}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={i.icon} /></svg>{i.label}</a>)}
+  </nav>
+</header>
