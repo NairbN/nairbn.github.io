@@ -30,6 +30,8 @@ export const TAB_ICONS = {
   vitals: 'M3 12h4l2-6 4 12 2-6h6',
   hardware: 'M7 7h10v10H7z M10 10h4v4h-4z M10 4v3 M14 4v3 M10 17v3 M14 17v3 M4 10h3 M4 14h3 M17 10h3 M17 14h3',
   more: 'M5 12h.01 M12 12h.01 M19 12h.01',
+  stories: 'M4 5.5c2.5-1 5.5-1 8 .5v13c-2.5-1.5-5.5-1.5-8-.5z M20 5.5c-2.5-1-5.5-1-8 .5v13c2.5-1.5 5.5-1.5 8-.5z',
+  about: 'M12 12a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5z M4.5 20c.8-3.6 3.8-5.5 7.5-5.5s6.7 1.9 7.5 5.5',
 } as const;
 
 /** Spec-card glyphs and tints (hardware page). */

@@ -10,10 +10,8 @@ const pages = [
   { key: 'stories', href: '/stories/', label: 'Stories' },
   { key: 'about', href: '/about/', label: 'About' },
 ];
-const tabs = pages.slice(0, 4);
-const more = pages.slice(4);
+const tabs = pages;
 const cur = (k: string) => (k === page ? 'page' : undefined);
-const RESUME = '/resume/';
 ---
 <header>
   <div class="nav glass">
@@ -26,20 +24,12 @@ const RESUME = '/resume/';
         <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_SUN} /></svg>
         <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_MOON} /></svg>
       </button>
-      <a class="btn-solid nav-resume" href={RESUME} aria-current={cur('resume')}>Résumé</a>
     </div>
   </div>
 
   <div class="bar glass">
     <a class="brand" href="/" aria-label="Heisenberg Lab, overview">Heisenberg Lab</a>
     <div class="bar-actions">
-      <details class="more" data-more>
-        <summary class="icon-btn" aria-label="More pages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={TAB_ICONS.more} stroke-width="2.6" /></svg></summary>
-        <div class="more-menu glass">
-          {more.map((p) => <a href={p.href} aria-current={cur(p.key)}>{p.label}</a>)}
-          <a href={RESUME} aria-current={cur('resume')}>Résumé</a>
-        </div>
-      </details>
       <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch theme">
         <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_SUN} /></svg>
         <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={THEME_MOON} /></svg>
@@ -47,10 +37,10 @@ const RESUME = '/resume/';
     </div>
   </div>
 
-  <nav class="tabbar glass" aria-label="Main">
+  <nav class="tabbar tabbar-pub glass" aria-label="Main">
     {tabs.map((p) => (
       <a href={p.href} aria-current={cur(p.key)}>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d={TAB_ICONS[p.key === 'home' ? 'home' : (p.key as 'services' | 'vitals' | 'hardware')]} /></svg>{p.label}
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d={TAB_ICONS[p.key as keyof typeof TAB_ICONS]} /></svg>{p.label}
       </a>
     ))}
   </nav>
