@@ -13,6 +13,7 @@ const routes = {
     ['/hardware', './src/targets/public/hardware.astro'],
     ['/stories', './src/targets/public/stories.astro'],
     ['/about', './src/targets/public/about.astro'],
+    ['/resume', './src/targets/public/resume.astro'],
     ['/data/public.json', './src/targets/public/data.ts'],
   ],
   internal: [
