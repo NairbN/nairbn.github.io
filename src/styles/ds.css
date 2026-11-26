@@ -217,6 +217,26 @@ html[data-page='home'] { --top-h: 760px; --m-mid: 1; --m-at: 55%; }
 /* flat glass: same surface without a backdrop filter, for long lists below the sharp part of the photo (the backdrop is already blurred there) */
 .plate { background: var(--glass); border: 1px solid var(--edge); border-top-color: var(--edge-top); box-shadow: var(--shadow-s); }
 
+/* text-fog: the blur belongs to the text element itself. A ::before sized to the text box
+   (plus a small margin) carries the backdrop blur, with soft rectangular edges, so it always
+   sits exactly behind the text however it wraps. */
+.text-fog { position: relative; z-index: 0; width: fit-content; }
+.text-fog::before {
+  content: ''; position: absolute; z-index: -1; pointer-events: none; inset: -30px -48px;
+  background: var(--fog-dense);
+  -webkit-backdrop-filter: blur(20px) saturate(125%); backdrop-filter: blur(20px) saturate(125%);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent), linear-gradient(to bottom, transparent, #000 30px, #000 calc(100% - 30px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent), linear-gradient(to bottom, transparent, #000 30px, #000 calc(100% - 30px), transparent);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+@media (max-width: 899.98px) {
+  .text-fog::before {
+    inset: -18px -22px;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent), linear-gradient(to bottom, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent), linear-gradient(to bottom, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  }
+}
+@media (prefers-reduced-transparency: reduce) { .text-fog::before { display: none; } }
 /* fog: a soft masked blur behind a paragraph (never behind the headline) */
 .fog-host { position: relative; }
 .fog-host > .fog { position: absolute; z-index: -1; pointer-events: none; }

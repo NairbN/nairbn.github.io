@@ -15,10 +15,7 @@ const d = loadPublic() as unknown as PublicData;
         <div class="home-text">
           <div class="pill glass" data-render="pillUpdated" set:html={V.pillUpdated(d)} />
           <h1>Heisenberg<br />Lab</h1>
-          <div class="fog-host">
-            <span class="fog fog-dense" aria-hidden="true"></span><span class="fog fog-breath" aria-hidden="true"></span>
-            <p class="home-p" data-render="homeLede" set:html={V.homeLede(d)} />
-          </div>
+          <p class="home-p text-fog" data-render="homeLede" set:html={V.homeLede(d)} />
           <a class="chip-by glass" href="/about/"><img src="/assets/brian.jpg" alt="" width="32" height="32" />Built by <strong>Brian Nguyen</strong></a>
         </div>
         <section class="home-vitals glass" aria-label="Vitals" data-render="homeVitals" set:html={V.homeVitals(d)} />
