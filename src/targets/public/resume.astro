@@ -15,7 +15,7 @@ const flagship = {
     'Planned, sourced and built a Proxmox VE server (Intel Core i9-7900X, 62 GB RAM, AMD Radeon AI PRO R9700 32 GB) running 15 guests (13 LXC, 2 VMs); drives bought via DMD (~$200 saved); ~30 hrs/week.',
     'Serve local LLMs via an OpenAI-compatible llama-swap gateway over Radiance with GPU passthrough: Qwen3.8 27B at ~113 tok/s (0.14 s first token), plus a 2B model, image generation and a llama.cpp fallback.',
     'Built a multi-agent ops layer: a Hermes IT agent on Discord (read-only Proxmox token, git-backed Obsidian vault), a Claude Code admin agent with hook guardrails and subagents, and a jailed sandbox VM.',
-    'Automated a job-inbox worker that sorts Outlook mail with the local LLM via Microsoft Graph.',
+    'Automated a job-inbox worker that sorts Outlook mail with the local LLM via Microsoft Graph, and built an isolated trading-research container for strategy backtests and paper trading.',
     'Monitoring: Prometheus, Grafana, Loki, Uptime Kuma (6 dashboards, 32 alert rules, 22 monitors, nightly model benchmarks). Security: default-deny per-guest firewall, internal-CA TLS via Caddy, AdGuard DNS, Tailscale-only remote access, Vaultwarden secrets, nightly backups.',
   ],
 };
