@@ -1,0 +1,173 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-11-28T13:43:59Z",
+ "lab": {
+  "name": "Heisenberg Lab",
+  "guests_total": 13,
+  "guests_running": 13,
+  "services_total": 22,
+  "services_up": 22
+ },
+ "host": {
+  "role": "Proxmox VE 9 hypervisor",
+  "cpu": "Intel Core i9-7900X (10 cores / 20 threads)",
+  "cpu_pct": 2,
+  "mem_pct": 29,
+  "mem_total_gb": 62,
+  "uptime_days": 23
+ },
+ "gpu": {
+  "model": "AMD Radeon AI PRO R9700",
+  "vram_total_gb": 32,
+  "vram_pct": 76,
+  "temp_c": 32
+ },
+ "guests": [
+  {
+   "id": 120,
+   "symbol": "Gu",
+   "name": "gus",
+   "role": "reverse proxy",
+   "category": "network",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 121,
+   "symbol": "Sk",
+   "name": "skyler",
+   "role": "password vault",
+   "category": "apps",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 122,
+   "symbol": "Ga",
+   "name": "gale",
+   "role": "git server",
+   "category": "apps",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 123,
+   "symbol": "Gr",
+   "name": "gretchen",
+   "role": "market research app",
+   "category": "apps",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 130,
+   "symbol": "Hk",
+   "name": "hank",
+   "role": "metrics & dashboards",
+   "category": "observability",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 131,
+   "symbol": "Go",
+   "name": "gomez",
+   "role": "log aggregation",
+   "category": "observability",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 140,
+   "symbol": "Td",
+   "name": "todd",
+   "role": "GPU inference",
+   "category": "ai",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 141,
+   "symbol": "Tu",
+   "name": "tuco",
+   "role": "IT assistant agent",
+   "category": "ai",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 142,
+   "symbol": "Sl",
+   "name": "superlab",
+   "role": "top secret",
+   "category": "ai",
+   "status": "classified",
+   "secret": true
+  },
+  {
+   "id": 143,
+   "symbol": "Fr",
+   "name": "francesca",
+   "role": "mail worker",
+   "category": "apps",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 144,
+   "symbol": "Fl",
+   "name": "flynn",
+   "role": "admin agent",
+   "category": "ai",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 151,
+   "symbol": "Ed",
+   "name": "ed",
+   "role": "VPN subnet router",
+   "category": "network",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 153,
+   "symbol": "Sa",
+   "name": "saul",
+   "role": "DNS & ad blocking",
+   "category": "network",
+   "status": "up",
+   "secret": false
+  },
+  {
+   "id": 160,
+   "symbol": "Ha",
+   "name": "homeassistant",
+   "role": "home automation",
+   "category": "home",
+   "status": "up",
+   "secret": false
+  }
+ ],
+ "uptime_30d": {
+  "overall": 98.2,
+  "by_category": {
+   "ai": 100.0,
+   "apps": 96.5,
+   "home": 100.0,
+   "network": 100.0,
+   "observability": 100.0
+  }
+ },
+ "ai": {
+  "models_available": 6
+ },
+ "ops": {
+  "changes_this_month": 154,
+  "decisions_total": 21,
+  "last_backup_age_h": 3,
+  "last_restore_test_ok": true,
+  "alerts_firing": 0
+ }
+}
